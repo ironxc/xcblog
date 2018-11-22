@@ -1,0 +1,66 @@
+@import '../../theme/variables';
+
+.login{
+  height: 100%;
+  position: relative;
+  background-size: 100% 100%;
+  .content{
+    width: 20rem;
+    position: relative;
+    background-color: $white;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 8rem auto 0 auto;
+    transition: height 2s ;
+    opacity: .9;
+    .nav{
+      text-align: center;
+      padding: 8px;
+      span{
+        font-size: 1.2rem;
+        margin: 0 5px;
+        display: inline-block;
+        padding: 3px 5px;
+        cursor: pointer;
+        @extend .borderAnimat;
+        &:hover{
+          &::after{
+            transform: scaleX(1);
+          }
+        }
+      }
+      .active {
+        &::after{
+          transform: scaleX(1);
+        }
+      }
+    }
+    .inputWrap{
+      padding: 5px 0;
+    }
+    .signin {
+      width: 100%;
+    }
+    .signup {
+      width: 100%;
+    }
+    .btn {
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      background-color: $bg-color-3;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+  }
+  .homelink{
+    height: 5rem;
+    display: flex;
+    flex-direction: row-reverse;
+    padding-right: 10rem;
+    div{
+      justify-content: flex-end;
+    }
+  }
+}

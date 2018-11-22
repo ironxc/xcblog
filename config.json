@@ -1,0 +1,21 @@
+
+{
+  "mongodb": {
+    "Database": "blog",        /*数据库名称*/
+    "Host": "127.0.0.1",       /*数据库ip*/
+    "Port": 27017,             /*数据库端口*/
+    "UserName": "admin",       /*数据库管理账号*/
+    "PassWord": "aaabbb"       /*数据库密码*/
+  },
+  "base": {
+    "APIPrefix": "/api",         /*Api接口前缀*/
+    "UploadImgDir": "/images",   /*上传图片本地保存到*/
+    "ImgPath": "/upload/images", /*上传后的图片请求地址前缀*/
+    "MaxMultipartMemory": 4,     /*上传的图片最大允许的大小，单位MB*/
+    "Port": 3100,                /*go监听端口*/
+    "TokenSecret": "z",          /*TokenSecret*/
+    "TokenMaxAge": 24,           /*token过期时间，单位小时*/
+    "CooKieMaxAge": 86400,       /*cookie过期时间，单位秒*/
+    "PassSecret": "asdfasf"      /*登录密码加密字符串*/
+  }
+}

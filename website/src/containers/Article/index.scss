@@ -1,0 +1,74 @@
+@import '../../theme/variables';
+.article{
+  .header{
+    min-height: 26rem;
+    position: relative;
+    background-size: 100%;
+    background-position: left center;
+    .homelink{
+      position: absolute;
+      left: 0;
+      top: 4rem;
+      width: 20%;
+      div{
+        width: 100%;
+        justify-content: center;
+        a{
+          color: $color-3;
+        }
+      }
+    }
+  }
+  .nologo{
+    min-height: 8rem;
+    .homelink{
+      top: 4rem;
+      width: 20%;
+      div{
+        a{
+          color: $color-1;
+        }
+      }
+    }
+  }
+  .content{
+    width: 55%;
+    margin: 0 auto;
+    padding: 2rem 0;
+    .description{
+      span{
+        color: $color-2;
+        display: block;
+      }
+      h2 {
+        font-size: 1.7rem;
+        margin: 5px 0 0 0;
+        color: $color-1;
+        font-weight: 500;
+      }
+      h3{
+        font-size: 1.2rem;
+        margin: 10px 0 20px 0;
+        color: $color-2;
+        font-weight: 300;
+      }
+    }
+    .btns{
+      text-align: right;
+      padding-top: 20px;
+      span{
+        cursor: pointer;
+        display:inline-block;
+        color: $color-1;
+        padding: 5px 10px;
+        font-size: 16px;
+        @extend .borderAnimat;
+        &:hover{
+          &::after{
+            transform: scaleX(1);
+          }
+        }
+      }
+    }
+  }
+}

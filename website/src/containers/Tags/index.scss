@@ -1,0 +1,26 @@
+@import '../../theme/variables';
+
+.tags {
+  height: 100%;
+  .homelink{
+    height: 12rem;
+    padding: 4rem 0 0 8rem;
+    box-sizing: border-box;
+  }
+  .content{
+    width: 60%;
+    margin: auto;
+    text-align: center;
+    span{
+      padding: 3px 5px;
+      display: inline-block;
+      cursor: pointer;
+      @extend .borderAnimat;
+      &:hover{
+        &::after{
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}
