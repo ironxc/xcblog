@@ -6,9 +6,8 @@ import UploadImage from './UploadImage'
 import { Motion, spring } from 'react-motion'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { create } from 'src/store/reducers/editor'
-import { getTags } from 'src/store/reducers/env'
-
+import { selectArticle } from 'src/models/article/selector'
+import { createStructuredSelector } from 'reselect'
 const springSetting = { stiffness: 600, damping: 34 }
 const iconlist = [
   {
@@ -51,56 +50,94 @@ const iconlist = [
     icon: 'icon-icon-home', text: '', name: 'home',
   },
 ]
-@connect(state => ({
-  data: state.editor.data,
-  allTags: state.env.allTags,
-}), { create, getTags })
+
+
+const mapStateToProps = createStructuredSelector({
+  data: selectArticle,
+})
+
+
+@connect(mapStateToProps)
 export default class Editor extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
-    create: PropTypes.func.isRequired,
-    getTags: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
   constructor (props){
     super(props)
     this.state = {
       focuse: false,
-      markdown: this.props.data.content,
+      markdown: this.props.data ? this.props.data.content : '',
       parsedData: '',
       popups: '',
       fullScreen: false,
       preview: false,
       title: {
-        value: this.props.data.name,
+        value: this.props.data ? this.props.data.name : '',
         error: '',
         placeholder: '请输入笔记标题',
         label: '标题',
         id: 'asas',
       },
       description: {
-        value: this.props.data.description,
+        value: this.props.data ? this.props.data.description : '',
         error: '',
         placeholder: '请输入笔记描述',
         label: '描述',
         id: 'asdfasdf',
       },
       logo: {
-        value: this.props.data.logo,
+        value: this.props.data ? this.props.data.logo : '',
         error: '',
         placeholder: '请输入笔记logo图片地址',
         label: 'logo地址',
         id: 'asdddffasdf',
       },
-      options: this.props.allTags.map(t => (t.value)),
-      tags: this.props.data.tags,
+      options: this.props.data ? this.props.allTags.map(t => (t.value)) : [],
+      tags: this.props.data ? this.props.data.tags : [],
     }
   }
   componentDidMount () {
-    this.props.getTags()
+    if(this.props.match.params.id !== 'new'){
+      this.props.dispatch({
+        type: 'article/get',
+        payload: {
+          id: this.props.match.params.id,
+        },
+      })
+    }
   }
   componentWillReceiveProps (nextProps) {
     this.setState({
+      focuse: false,
+      markdown: nextProps.data.content,
+      parsedData: ParseMardown(nextProps.data.content).parsedData,
+      popups: '',
+      fullScreen: false,
+      preview: false,
+      title: {
+        value: nextProps.data.name,
+        error: '',
+        placeholder: '请输入笔记标题',
+        label: '标题',
+        id: 'asas',
+      },
+      description: {
+        value: nextProps.data.description,
+        error: '',
+        placeholder: '请输入笔记描述',
+        label: '描述',
+        id: 'asdfasdf',
+      },
+      logo: {
+        value: nextProps.data.logo,
+        error: '',
+        placeholder: '请输入笔记logo图片地址',
+        label: 'logo地址',
+        id: 'asdddffasdf',
+      },
       options: nextProps.allTags.map(t => (t.value)),
+      tags: nextProps.data.tags,
     })
   }
   setPopus = (name) => {
@@ -280,22 +317,21 @@ export default class Editor extends Component {
     })
   }
   onSubmit = () => {
-    this.props.create({
-      id: 'new',
-      logo: this.state.logo.value,
-      tags: this.state.tags,
-      name: this.state.title.value,
-      description: this.state.description.value,
-      content: this.state.markdown,
-      status: 1,
-      browseCount: 0,
+    this.props.dispatch({
+      type: this.props.match.params.id !== 'new' ? 'article/update' : 'article/create',
+      payload: {
+        id: this.props.match.params.id,
+        data: {
+          logo: this.state.logo.value,
+          tags: this.state.tags,
+          name: this.state.title.value,
+          description: this.state.description.value,
+          content: this.state.markdown,
+          status: 1,
+          browseCount: 0,
+        },
+      },
     })
-      .then(res => {
-        if(!res){
-          return 
-        }
-        this.props.history.push(`/article/${res}`)
-      })
   }
   render () {
     const styles = require('./index.scss')

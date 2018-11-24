@@ -4,18 +4,22 @@ import Input from 'src/components/Input'
 import HomeLink from 'src/components/HomeLink'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
-import { signin, signup } from 'src/store/reducers/user'
+
+import { selectBingimg } from 'src/models/init/selector'
+import { createStructuredSelector } from 'reselect'
+
+const mapStateToProps = createStructuredSelector({
+  bingimg: selectBingimg,
+})
+
+
 const queryString = require('query-string')
 const emailValidReg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
-@connect(state => ({
-  userinfo: state.user.info,
-  bingimg: state.env.bingimg,
-}), { signin, signup })
+@connect(mapStateToProps)
 export default class Login extends React.Component {
   static propTypes = {
-    signin: PropTypes.func.isRequired,
-    signup: PropTypes.func.isRequired,
     bingimg: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
   constructor (props) {
     super(props)
@@ -147,14 +151,12 @@ export default class Login extends React.Component {
     if(username.error || password.error) {
       console.log('err')
     }
-    this.props.signin({
-      password: password.value,
-      username: username.value,
-    }).then((res) => {
-      if(!res) {
-        return 
-      }
-      this.props.history.push('/home')
+    this.props.dispatch({
+      type: 'init/singIn',
+      payload: {
+        password: password.value,
+        username: username.value,
+      },
     })
   }
   signup = () => {
@@ -162,12 +164,13 @@ export default class Login extends React.Component {
     if (username.error || password.error || email.error) {
       console.log('err')
     }
-    this.props.signup({
-      password: password.value,
-      username: username.value,
-      email: email.value,
-    }).then(() => {
-      this.props.history.push('/home')
+    this.props.dispatch({
+      type: 'init/signUp',
+      payload: {
+        password: password.value,
+        username: username.value,
+        email: email.value,
+      },
     })
   }
   submit = () => {

@@ -9,7 +9,33 @@
     font-size: 2.6rem;
     margin: 2rem 0 10px 0;
   }
-  .btns{
+  .navbar{
+    height: 5rem;
+    padding: 0 3rem;
+    display: flex;
+    .btns{
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      span{
+        padding: 5px 0;
+        @extend .borderAnimat;
+        &:hover{
+          &::after{
+            transform: scaleX(1);
+          }
+        }
+        a {
+          color: $color-2;
+          padding: 0 .5rem;
+          margin:0 5px;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .pageBtns{
     padding: 5px;
     width: 55%;
     margin: 0 auto;

@@ -27,6 +27,16 @@ type articleListItem struct {
 	Author       model.Author  `json:"author"`
 	Logo       	 string        `json:"logo"`
 }
+type articleUpdate struct {
+	Name         string        `json:"name"`
+	Description  string        `json:"description"`
+	BrowseCount  uint          `json:"browseCount"`
+	Status       uint          `json:"status"`
+	Content      string        `json:"content"`
+	Tags         []string      `json:"tags"`
+	Logo       	 string        `json:"logo"`
+	UpdatedAt    time.Time     `json:"updatedAt"`
+}
 //获取文章详细数据
 func GetArticleDetail(c *gin.Context) {
 	var resData model.Article
@@ -45,19 +55,12 @@ func GetArticleDetail(c *gin.Context) {
 //创建文章
 func CreateArticle(c *gin.Context) {
 	var postData PostArticle
-	var author model.Author
-	userid, exist := c.Get("userid")
+	user, exist := c.Get("user")
 	if(!exist) {
-		pkg.SendBadResponse(c, "服务端错误")
+		pkg.SendBadResponse(c, "未登录")
 		return
 	}
 	if err := c.BindJSON(&postData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
-		return
-	}
-	if findErr := model.DB.C("users").Find(bson.M{
-		"_id": userid,
-	}).One(&author); findErr != nil {
 		pkg.SendBadResponse(c, "服务端错误")
 		return
 	}
@@ -71,7 +74,7 @@ func CreateArticle(c *gin.Context) {
 		Status:      postData.Status,
 		Content:     postData.Content,
 		Tags:        postData.Tags,
-		Author:      author,
+		Author:      user.(model.Author),
 		Logo:        postData.Logo,
 	}
 	if err := model.DB.C("articles").Insert(&articleData); err != nil {
@@ -80,6 +83,46 @@ func CreateArticle(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": articleData.ID,
+		"msg": "success",
+	})
+}
+func DeleteArticle(c *gin.Context) {
+	id := c.Param("id")
+	if findErr := model.DB.C("articles").Remove(bson.M{
+		"_id": bson.ObjectIdHex(id),
+	}); findErr != nil {
+		pkg.SendBadResponse(c, "找不到该数据")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": "",
+		"msg": "success",
+	})
+}
+func UpdateArticle(c *gin.Context) {
+	var postData PostArticle
+	id := c.Param("id")
+	if err := c.BindJSON(&postData); err != nil {
+		pkg.SendBadResponse(c, "服务端错误")
+		return
+	}
+	if err := model.DB.C("articles").Update(bson.M{
+		"_id": bson.ObjectIdHex(id),
+	}, bson.M{"$set": articleUpdate{
+		UpdatedAt:	 time.Now(),
+		Name:        postData.Name,
+		Description: postData.Description,
+		BrowseCount: postData.BrowseCount,
+		Status:      postData.Status,
+		Content:     postData.Content,
+		Tags:        postData.Tags,
+		Logo:        postData.Logo,
+	}}); err != nil {
+		pkg.SendBadResponse(c, "服务端错误")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": id,
 		"msg": "success",
 	})
 }

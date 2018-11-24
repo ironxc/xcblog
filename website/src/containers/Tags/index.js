@@ -1,19 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getTags } from 'src/store/reducers/env'
+import { selectAllTags } from 'src/models/init/selector'
 import HomeLink from 'src/components/HomeLink'
+import { createStructuredSelector } from 'reselect'
 
-@connect(state => ({
-  allTags: state.env.allTags,
-}), { getTags })
+
+const mapStateToProps = createStructuredSelector({
+  allTags: selectAllTags,
+})
+
+@connect(mapStateToProps)
 export default class Tags extends React.Component {
   static propTypes = {
     allTags: PropTypes.array.isRequired,
-    getTags: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
   componentDidMount () {
-    this.props.getTags()
+    this.props.dispatch({
+      type: 'init/getAllTags',
+    })
   }
   handleClick = (val) => () => {
     this.props.history.push(`/home?tag=${val}`)

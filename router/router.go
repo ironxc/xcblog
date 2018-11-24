@@ -22,6 +22,8 @@ func Route(router *gin.Engine) {
 	{
 		api.GET("/article/:id",  article.GetArticleDetail)
 		api.POST("/article/:id", mw.SigninRequired, article.CreateArticle)
+		api.DELETE("/article/:id", mw.SigninRequired, article.DeleteArticle)
+		api.PUT("/article/:id", mw.SigninRequired, article.UpdateArticle)
 		api.GET("/tags",         article.GetTags)
 		api.GET("/articlelist",  article.GetArticleList)
 	}
@@ -29,7 +31,7 @@ func Route(router *gin.Engine) {
 		api.GET("/bingimg", spider.GetBingBg)
 	}
 	{
-		api.GET("/image", image.GetImage)
+		api.GET("/imagelist", image.GetImage)
 		api.POST("/image", mw.SigninRequired, image.UploadImage)
 	}
 }

@@ -1,50 +1,59 @@
 import React from 'react'
-import request from 'src/utils/request'
 import { ParseMardown } from 'src/utils'
 import HomeLink from 'src/components/HomeLink'
 import dayjs from 'dayjs'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { userinfo } from 'src/store/reducers/user'
-@connect((state) => ({
-  info: state.user.info,
-}), { userinfo })
+
+import { selectUerInfo } from 'src/models/init/selector'
+import { selectArticle } from 'src/models/article/selector'
+import { createStructuredSelector } from 'reselect'
+const mapStateToProps = createStructuredSelector({
+  article: selectArticle,
+  userInfo: selectUerInfo,
+})
+
+
+@connect(mapStateToProps)
 export default class Article extends React.Component {
   static propTypes = {
-    info: PropTypes.object,
+    userinfo: PropTypes.object,
+    article: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
   }
-  state = {
-    data: '',
-  }
-  componentDidMount () {
-    request.get(`/api/article/${this.props.match.params.id}`)
-      .then(res => {
-        this.setState({
-          data: res,
-        })
-      })
-    this.props.userinfo()
+  componentWillUnmount () {
+    this.props.dispatch({
+      type: 'article/updateState',
+      payload: {
+        article: undefined,
+      },
+    })
   }
   onEdit = () => {
     this.props.history.push(`/editor/${this.props.match.params.id}`)
   }
   onDelete = () => {
-    
+    this.props.dispatch({
+      type: 'article/delete',
+      payload: {
+        id: this.props.match.params.id,
+      },
+    })
   }
   render () {
     const styles = require('./index.scss')
-    const { data } = this.state
-    if(!data){
+    const { info, article } = this.props
+    if(!article){
       return null
     }
-    const htmlContent = ParseMardown(data.content).parsedData
+    const htmlContent = ParseMardown(article.content).parsedData
     return (
       <div className={styles.article}>
         <div className={classnames(styles.header, {
-          [styles.nologo]: !Boolean(data.logo),
+          [styles.nologo]: !Boolean(article.logo),
         })} style={{
-          backgroundImage: `url(${data.logo})`,
+          backgroundImage: `url(${article.logo})`,
         }}>
           <div className={styles.homelink}>
             <HomeLink />
@@ -52,15 +61,17 @@ export default class Article extends React.Component {
         </div>
         <div className={styles.content}>
           <div className={styles.description}>
-            <span>{dayjs(data.updatedAt).format('MMM DD YYYY')} / {data.author.name}</span>
-            <h2>{data.name}</h2>
-            <h3>{data.description}</h3>
+            <span>{dayjs(article.updatedAt).format('MMM DD YYYY')} / {article.author.name}</span>
+            <h2>{article.name}</h2>
+            <h3>{article.description}</h3>
           </div>
           <div dangerouslySetInnerHTML={{ __html: htmlContent }} className="markdown-body" />
-          <div className={styles.btns}>
-            <span onClick={this.onEdit}>编辑</span>
-            <span onClick={this.onDelete}>删除</span>
-          </div>
+          {
+            info && info.id === article.author.id && <div className={styles.btns}>
+              <span onClick={this.onEdit}>编辑</span>
+              <span onClick={this.onDelete}>删除</span>
+            </div>
+          }
         </div>
       </div>
     )

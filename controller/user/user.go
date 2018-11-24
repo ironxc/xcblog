@@ -83,7 +83,7 @@ func SignIn(c *gin.Context) {
 		CreatedAt:       result.CreatedAt.Unix(),
 		UpdatedAt:       result.UpdatedAt.Unix(),
 	}
-	mw.CreateJwtToken(c, result.ID)
+	mw.CreateJwtToken(c, result.ID, result.UserName)
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "success",
 		"data": userData,
@@ -103,7 +103,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 	UserData, saveErr := SaveUser(postData)
-	mw.CreateJwtToken(c, UserData.ID)
+	mw.CreateJwtToken(c, UserData.ID, UserData.UserName)
 
 	if saveErr != nil {
 		pkg.SendBadResponse(c, "服务端错误")
@@ -116,13 +116,13 @@ func SignUp(c *gin.Context) {
 }
 func Userinfo(c *gin.Context) {
 	var result UserRes
-	userid, exit := c.Get("userid")
+	user, exit := c.Get("user")
 	if !exit {
 		pkg.SendBadResponse(c, "未登录")
 		return
 	}
 	if findErr := model.DB.C("users").Find(bson.M{
-		"_id": userid,
+		"_id": user.(model.Author).ID,
 	}).One(&result); findErr != nil {
 		pkg.SendBadResponse(c, "未登录")
 		return

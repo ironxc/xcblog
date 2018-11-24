@@ -3,27 +3,24 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { Motion, spring } from 'react-motion'
 import { connect } from 'react-redux'
-import { getImages } from 'src/store/reducers/editor'
-import  request from 'src/utils/request'
+
+
+import { selectImagelist } from 'src/models/init/selector'
+import { createStructuredSelector } from 'reselect'
+const mapStateToProps = createStructuredSelector({
+  images: selectImagelist,
+})
 const springSetting = { stiffness: 600, damping: 34 }
-@connect(state => ({
-  image: state.editor.image,
-}), { getImages })
+
+@connect(mapStateToProps)
 export default class UploadImage extends React.Component {
   static propTypes = {
     show: PropTypes.bool.isRequired,
-    image: PropTypes.object.isRequired,
-    getImages: PropTypes.func.isRequired,
-    insertImg: PropTypes.func.isRequired,
+    images: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
   state = {
     perPage: 12,
-  }
-  componentDidMount () {
-    this.props.getImages({
-      page: 1,
-      perPage: this.state.perPage,
-    })
   }
   onDescription = (value) => {
     this.setState({
@@ -43,7 +40,7 @@ export default class UploadImage extends React.Component {
   }
   renderImageList () {
     const styles = require('./index.scss')
-    const { image: { list } } = this.props
+    const { images: { list } } = this.props
     return (
       <div className = { styles.list } >
         {
@@ -70,32 +67,37 @@ export default class UploadImage extends React.Component {
   onImageData = (event) => {
     const data = new FormData()
     data.append('image', event.target.files[0])
-    request.post('/api/image', data)
-      .then(() => {
-        this.props.getImages({
-          page: 1,
-          perPage: this.state.perPage,
-        })
-      })
+    this.props.dispatch({
+      type: 'init/postImage',
+      payload: {
+        data,
+      },
+    })
   }
   insertImg = (path) => () => {
     this.props.insertImg(`![](${path})`)
   }
   handlePrePage = () => {
-    this.props.getImages({
-      page: this.props.image.page - 1,
-      perPage: this.state.perPage,
+    this.props.dispatch({
+      type: 'init/getImageList',
+      payload: {
+        page: this.props.images.page - 1,
+        perPage: this.state.perPage,
+      },
     })
   }
   handleNextPage = () => {
-    this.props.getImages({
-      page: this.props.image.page + 1,
-      perPage: this.state.perPage,
+    this.props.dispatch({
+      type: 'init/getImageList',
+      payload: {
+        page: this.props.images.page + 1,
+        perPage: this.state.perPage,
+      },
     })
   }
   render () {
     const styles = require('./index.scss')
-    const { show, image: { count, page } } = this.props
+    const { show, images: { count, page } } = this.props
     const { perPage } = this.state
     return (
       <Motion style={{ top: spring(show ? 20 : 100, springSetting) }}>

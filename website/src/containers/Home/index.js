@@ -2,19 +2,22 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ArticleBox from 'src/components/ArticleBox'
 import { connect } from 'react-redux'
-import { getArticles } from 'src/store/reducers/home'
+import { selectArticlelist } from 'src/models/article/selector'
+import { selectUerInfo } from 'src/models/init/selector'
+import { createStructuredSelector } from 'reselect'
+import HomeLink from 'src/components/HomeLink'
+import { Link } from 'dva/router'
 const qs = require('query-string')
-@connect(state => ({
-  list: state.home.list,
-  page: state.home.page,
-  count: state.home.count,
-}), { getArticles })
+const mapStateToProps = createStructuredSelector({
+  articles: selectArticlelist,
+  userInfo: selectUerInfo,
+})
+@connect(mapStateToProps)
 export default class Home extends Component {
   static propTypes = {
-    getArticles: PropTypes.func.isRequired,
-    list: PropTypes.array.isRequired,
-    page: PropTypes.number.isRequired,
-    count: PropTypes.number.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    articles: PropTypes.object.isRequired,
+    userInfo: PropTypes.object.isRequired,
   }
   state = {
     perPage:5,
@@ -24,24 +27,30 @@ export default class Home extends Component {
     const { location: { search } } = nextProps
     const queryObj = qs.parse(search)
     if( search !== this.props.location.search) {
-      this.props.getArticles({
-        page: 1,
-        perPage: this.state.perPage,
-        tag: queryObj.tag ? queryObj.tag : '',
+      this.props.dispatch({
+        type: 'article/getArticleList',
+        payload: {
+          page: 1,
+          perPage: this.state.perPage,
+          tag: queryObj.tag ? queryObj.tag : '',
+        },
       })
     }
   }
   componentDidMount () {
     const { location: { search } } = this.props
     const queryObj = qs.parse(search)
-    this.props.getArticles({
-      page: 1,
-      perPage: this.state.perPage,
-      tag: queryObj.tag ? queryObj.tag : '',
+    this.props.dispatch({
+      type: 'article/getArticleList',
+      payload: {
+        page: 1,
+        perPage: this.state.perPage,
+        tag: queryObj.tag ? queryObj.tag : '',
+      },
     })
   }
   loadMore = (type) => () => {
-    const { location: { search }, page, count } = this.props
+    const { location: { search }, articles: { page, count } } = this.props
     const { perPage } = this.state
     const queryObj = qs.parse(search)
     if (type === 'newer' && page <= 1){
@@ -50,14 +59,17 @@ export default class Home extends Component {
     if (type === 'previous' && Math.ceil(count / perPage) <= page) {
       return
     }
-    this.props.getArticles({
-      page: type === 'newer' ? page - 1 : page + 1,
-      perPage: this.state.perPage,
-      tag: queryObj.tag ? queryObj.tag : '',
+    this.props.dispatch({
+      type: 'article/getArticleList',
+      payload: {
+        page: type === 'newer' ? page - 1 : page + 1,
+        perPage: this.state.perPage,
+        tag: queryObj.tag ? queryObj.tag : '',
+      },
     })
   }
   infos () {
-    const { list, location: { search } } = this.props
+    const { articles: { list }, location: { search } } = this.props
     const queryObj = qs.parse(search)
     var result = []
     list.forEach(l => {
@@ -73,7 +85,7 @@ export default class Home extends Component {
   }
   render () {
     const styles = require('./index.scss')
-    const { list, history: { push }, count, page } = this.props
+    const { articles: { list, count, page } , history: { push } } = this.props
     const { perPage } = this.state
     return (
       <div className={styles.home}>
@@ -87,13 +99,23 @@ export default class Home extends Component {
             return <ArticleBox data={item} key={item.id} push={push}/>
           })
         }
-        <div className={styles.btns}>
+        <div className={styles.pageBtns}>
           <span
             onClick={this.loadMore('newer')}
             className={page <= 1 ? styles.disable : styles.able}>上一页</span>
           <span
             onClick={this.loadMore('previous')}
             className={Math.ceil(count / perPage) <= page ? styles.disable : styles.able}>下一页</span>
+        </div>
+        <div className={styles.navbar}>
+          <HomeLink />
+          <div className={styles.btns}>
+            {
+              this.props.userInfo && <span key="写笔记"><Link to="/editor/new">写笔记</Link></span>
+            }
+            <span><Link to="/tags">标签</Link></span>
+            <span><Link to="/profile">我</Link></span>
+          </div>
         </div>
       </div>
     )

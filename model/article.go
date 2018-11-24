@@ -24,8 +24,8 @@ type Article struct {
 */
 
 type Author struct {
-	UserName string        `json:"username"`
-	Name     string        `json:"name"`
+	UserName string         `json:"username"`
+	ID       bson.ObjectId  `json:"id" bson:"_id"`
 }
 
 type BingImage struct {
