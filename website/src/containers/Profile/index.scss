@@ -1,11 +1,25 @@
+@import '../../theme/variables';
+
 .profile {
-  .homelink{
+  .header{
     height: 12rem;
-    padding: 4rem 0 0 8rem;
+    padding-top: 4rem;
     box-sizing: border-box;
+    text-align: right;
+    padding-right: 10rem;
   }
   .content{
     margin: auto;
-    width: 60%;
+    width: 40%;
+    :global{
+      h5{
+        margin: 0;
+        line-height: 1.8;
+        font-size: 1.3rem;
+      }
+    }
+  }
+  :global{
+    color: $highlight-color-1; 
   }
 }

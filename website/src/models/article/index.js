@@ -1,6 +1,7 @@
 
 import request from 'src/utils/request'
 import pathToRegexp from 'path-to-regexp'
+import { routerRedux } from 'dva/router'
 const ns = 'article'
 const init = {
   article: undefined,
@@ -23,10 +24,10 @@ export default function (initState = init, namespace = ns) {
       },
     },
     effects: {
-      *create (action, { call }) {
+      *create (action, { put, call }) {
         const { payload } = action
         const id = yield call(request.post, `/api/article/${payload.id}`, payload.data)
-        console.log(id)
+        yield put(routerRedux.push(`/article/${id}`))
       },
       *get (action, { put, call }) {
         const { payload: { id } } = action
@@ -38,10 +39,10 @@ export default function (initState = init, namespace = ns) {
           },
         })
       },
-      *update (action, { call }) {
+      *update (action, { put, call }) {
         const { payload } = action
         const id = yield call(request.put, `/api/article/${payload.id}`, payload.data)
-        console.log(id)
+        yield put(routerRedux.push(`/article/${id}`))
       },
       *delete (action, { call }) {
         const { payload: { id } } = action

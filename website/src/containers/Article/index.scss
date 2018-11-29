@@ -5,17 +5,14 @@
     position: relative;
     background-size: 100%;
     background-position: left center;
+    background-repeat: no-repeat;
     .homelink{
       position: absolute;
-      left: 0;
+      right: 0;
       top: 4rem;
       width: 20%;
-      div{
-        width: 100%;
-        justify-content: center;
-        a{
-          color: $color-3;
-        }
+      a{
+        color: $color-3;
       }
     }
   }
@@ -35,10 +32,12 @@
     width: 55%;
     margin: 0 auto;
     padding: 2rem 0;
+    position: relative;
     .description{
       span{
         color: $color-2;
         display: block;
+        font-weight: bold;
       }
       h2 {
         font-size: 1.7rem;
@@ -69,6 +68,11 @@
           }
         }
       }
+    }
+  }
+  :global{
+    *{
+      color:$color-1;
     }
   }
 }

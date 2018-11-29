@@ -22,6 +22,13 @@ export default class UploadImage extends React.Component {
   state = {
     perPage: 12,
   }
+  componentDidMount () {
+    if(this.props.images.list.length <= 0){
+      this.props.dispatch({
+        type: 'init/getImageList',
+      })
+    }
+  }
   onDescription = (value) => {
     this.setState({
       description: {

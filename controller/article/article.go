@@ -37,9 +37,28 @@ type articleUpdate struct {
 	Logo       	 string        `json:"logo"`
 	UpdatedAt    time.Time     `json:"updatedAt"`
 }
+type articleRes struct {
+	ID           bson.ObjectId `json:"id" bson:"_id"`
+	CreatedAt    time.Time     `json:"createdAt"`
+	UpdatedAt    time.Time     `json:"updatedAt"`
+	Name         string        `json:"name"`
+	Description  string        `json:"description"`
+	BrowseCount  uint          `json:"browseCount"`
+	Status       uint          `json:"status"`
+	Content      string        `json:"content"`
+	Tags         []string      `json:"tags"`
+	Author       author        `json:"author"`
+	Logo       	 string        `json:"logo"`
+}
+type author struct {
+	ID        bson.ObjectId `json:"id" bson:"_id"`
+	Name      string        `json:"name"`
+	UserName  string        `json:"username"`
+}
 //获取文章详细数据
 func GetArticleDetail(c *gin.Context) {
-	var resData model.Article
+	var resData articleRes
+	var authorData author
 	id := c.Param("id")
 	if findErr := model.DB.C("articles").Find(bson.M{
 		"_id": bson.ObjectIdHex(id),
@@ -47,6 +66,13 @@ func GetArticleDetail(c *gin.Context) {
 		pkg.SendBadResponse(c, "找不到该数据")
 		return
 	}
+	if findErr := model.DB.C("users").Find(bson.M{
+		"username": resData.Author.UserName,
+	}).One(&authorData); findErr != nil {
+		pkg.SendBadResponse(c, "作者不存在")
+		return
+	}
+	resData.Author = authorData
 	c.JSON(http.StatusOK, gin.H{
 		"data": resData,
 		"msg": "success",

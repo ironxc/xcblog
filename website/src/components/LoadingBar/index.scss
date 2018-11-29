@@ -1,0 +1,15 @@
+@import '../../theme/variables';
+
+.loadingBar{
+  position: fixed;
+  width: 100%;
+  height: 2px;
+  top: 0;
+  left: 0;
+  .bar{
+    background-color: $highlight-color-1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+}

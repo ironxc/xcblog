@@ -17,6 +17,7 @@
     .nav{
       text-align: center;
       padding: 8px;
+      border-bottom: 1px dashed;
       span{
         font-size: 1.2rem;
         margin: 0 5px;
@@ -55,12 +56,13 @@
     }
   }
   .homelink{
-    height: 5rem;
-    display: flex;
-    flex-direction: row-reverse;
+    height: 12rem;
+    padding-top: 4rem;
+    box-sizing: border-box;
+    text-align: right;
     padding-right: 10rem;
-    div{
-      justify-content: flex-end;
+    a{
+      color: $color-3;
     }
   }
 }

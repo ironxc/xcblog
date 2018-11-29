@@ -1,13 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default class HomeLink extends React.Component {
-  render () {
-    const styles = require('./index.scss')
-    return(
-      <div className={styles.header}>
-        <Link to="/home">旋转，跳跃喔</Link>
-      </div>
-    )
-  }
+const HomeLink = () => {
+  const styles = require('./index.scss')
+  return <Link to="/home" className={styles.homeLink}>旋转，跳跃喔</Link>
 }
+export default HomeLink

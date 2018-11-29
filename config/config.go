@@ -11,15 +11,6 @@ type DataType struct {
 	Mongodb    Mongodb  `json:"mongodb"`
 	Base       Base     `json:"base"`
 }
-var MongoConf Mongodb
-type  Mongodb struct  {
-	Database  string   `json:"Database"`           /*数据库名称*/
-	Host      string   `json:"Host"`               /*数据库ip*/
-	Port      int16    `json:"Port"`               /*数据库端口*/
-	UserName  string   `json:"UserName"`           /*数据库管理账号*/
-	PassWord  string   `json:"PassWord"`           /*数据库密码*/
-}
-var BaseConf Base
 type Base struct {
 	APIPrefix            string      `json:"APIPrefix"`           /*Api接口前缀*/
 	UploadImgDir         string      `json:"UploadImgDir"`        /*Api接口前缀*/
@@ -30,6 +21,17 @@ type Base struct {
 	TokenMaxAge          int64       `json:"TokenMaxAge"`         /*token过期时间，单位秒*/
 	CooKieMaxAge         int         `json:"CooKieMaxAge"`         /*cookie过期时间，单位秒*/
 }
+type  Mongodb struct  {
+	Database  string   `json:"Database"`           /*数据库名称*/
+	Host      string   `json:"Host"`               /*数据库ip*/
+	Port      int16    `json:"Port"`               /*数据库端口*/
+	UserName  string   `json:"UserName"`           /*数据库管理账号*/
+	PassWord  string   `json:"PassWord"`           /*数据库密码*/
+}
+
+var MongoConf Mongodb
+var BaseConf Base
+
 func initConfig() {
 	var data DataType
 	configFile, err := os.Open("config.json")

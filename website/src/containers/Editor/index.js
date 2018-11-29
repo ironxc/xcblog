@@ -7,6 +7,7 @@ import { Motion, spring } from 'react-motion'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { selectArticle } from 'src/models/article/selector'
+import { selectAllTags } from 'src/models/init/selector'
 import { createStructuredSelector } from 'reselect'
 const springSetting = { stiffness: 600, damping: 34 }
 const iconlist = [
@@ -54,9 +55,8 @@ const iconlist = [
 
 const mapStateToProps = createStructuredSelector({
   data: selectArticle,
+  allTags: selectAllTags,
 })
-
-
 @connect(mapStateToProps)
 export default class Editor extends Component {
   static propTypes = {
@@ -93,11 +93,16 @@ export default class Editor extends Component {
         label: 'logo地址',
         id: 'asdddffasdf',
       },
-      options: this.props.data ? this.props.allTags.map(t => (t.value)) : [],
+      options: this.props.allTags ? this.props.allTags.map(t => (t.value)) : [],
       tags: this.props.data ? this.props.data.tags : [],
     }
   }
   componentDidMount () {
+    if (this.props.allTags.length <= 0) {
+      this.props.dispatch({
+        type: 'init/getAllTags',
+      })
+    }
     if(this.props.match.params.id !== 'new'){
       this.props.dispatch({
         type: 'article/get',
@@ -108,36 +113,37 @@ export default class Editor extends Component {
     }
   }
   componentWillReceiveProps (nextProps) {
+    console.log(nextProps)
     this.setState({
       focuse: false,
-      markdown: nextProps.data.content,
-      parsedData: ParseMardown(nextProps.data.content).parsedData,
+      markdown: nextProps.data ? nextProps.data.content : '',
+      parsedData: nextProps.data ?  ParseMardown(nextProps.data.content).parsedData : '',
       popups: '',
       fullScreen: false,
       preview: false,
       title: {
-        value: nextProps.data.name,
+        value: nextProps.data ? nextProps.data.name : '',
         error: '',
         placeholder: '请输入笔记标题',
         label: '标题',
         id: 'asas',
       },
       description: {
-        value: nextProps.data.description,
+        value: nextProps.data ? nextProps.data.description : '',
         error: '',
         placeholder: '请输入笔记描述',
         label: '描述',
         id: 'asdfasdf',
       },
       logo: {
-        value: nextProps.data.logo,
+        value: nextProps.data ? nextProps.data.logo : '',
         error: '',
         placeholder: '请输入笔记logo图片地址',
         label: 'logo地址',
         id: 'asdddffasdf',
       },
-      options: nextProps.allTags.map(t => (t.value)),
-      tags: nextProps.data.tags,
+      options: nextProps.allTags ? nextProps.allTags.map(t => (t.value)) : [],
+      tags: nextProps.data ? nextProps.data.tags : [],
     })
   }
   setPopus = (name) => {

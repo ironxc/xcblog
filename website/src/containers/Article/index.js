@@ -5,7 +5,8 @@ import dayjs from 'dayjs'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-
+import { Motion, spring } from 'react-motion'
+import InnerHtmlXssFilter from 'src/components/InnerHtmlXssFilter'
 import { selectUerInfo } from 'src/models/init/selector'
 import { selectArticle } from 'src/models/article/selector'
 import { createStructuredSelector } from 'reselect'
@@ -43,36 +44,50 @@ export default class Article extends React.Component {
   }
   render () {
     const styles = require('./index.scss')
-    const { info, article } = this.props
+    const { userInfo, article } = this.props
     if(!article){
       return null
     }
     const htmlContent = ParseMardown(article.content).parsedData
     return (
       <div className={styles.article}>
-        <div className={classnames(styles.header, {
-          [styles.nologo]: !Boolean(article.logo),
-        })} style={{
-          backgroundImage: `url(${article.logo})`,
-        }}>
-          <div className={styles.homelink}>
-            <HomeLink />
-          </div>
-        </div>
-        <div className={styles.content}>
-          <div className={styles.description}>
-            <span>{dayjs(article.updatedAt).format('MMM DD YYYY')} / {article.author.name}</span>
-            <h2>{article.name}</h2>
-            <h3>{article.description}</h3>
-          </div>
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} className="markdown-body" />
+        <Motion defaultStyle={{ bottom: 10 }}
+          style={{ bottom: spring(0) }}>
           {
-            info && info.id === article.author.id && <div className={styles.btns}>
-              <span onClick={this.onEdit}>编辑</span>
-              <span onClick={this.onDelete}>删除</span>
-            </div>
+            ({ bottom }) => (
+              <div className={classnames(styles.header, {
+                [styles.nologo]: !Boolean(article.logo),
+              })} style={{
+                backgroundImage: `url(${article.logo})`,
+                bottom,
+              }}>
+                <div className={styles.homelink}>
+                  <HomeLink />
+                </div>
+              </div>
+            ) 
           }
-        </div>
+        </Motion>
+        <Motion defaultStyle={{ top: 50 }} style={{ top: spring(0) }}>
+          {
+            ({ top }) => (
+              <div className={styles.content} style={{ top }}>
+                <div className={styles.description}>
+                  <span>{dayjs(article.updatedAt).format('MMM DD YYYY')} / {article.author.name}</span>
+                  <h2>{article.name}</h2>
+                  <h3>{article.description}</h3>
+                </div>
+                <InnerHtmlXssFilter children={htmlContent} className="markdown-body"/>
+                {
+                  userInfo && userInfo.id === article.author.id && <div className={styles.btns}>
+                    <span onClick={this.onEdit}>编辑</span>
+                    <span onClick={this.onDelete}>删除</span>
+                  </div>
+                }
+              </div>
+            )
+          }
+        </Motion>
       </div>
     )
   }

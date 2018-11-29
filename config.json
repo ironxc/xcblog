@@ -15,7 +15,7 @@
     "Port": 3100,                /*go监听端口*/
     "TokenSecret": "z",          /*TokenSecret*/
     "TokenMaxAge": 24,           /*token过期时间，单位小时*/
-    "CooKieMaxAge": 86400,       /*cookie过期时间，单位秒*/
+    "CooKieMaxAge": 24,       /*cookie过期时间，单位小时*/
     "PassSecret": "asdfasf"      /*登录密码加密字符串*/
   }
 }

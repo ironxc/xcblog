@@ -11,8 +11,10 @@
   }
   .navbar{
     height: 5rem;
-    padding: 0 3rem;
+    padding: 0 5rem 0 3rem;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     .btns{
       width: 50%;
       display: flex;
@@ -57,6 +59,48 @@
     .able{
       &:hover{
         color: $highlight-color-1;
+      }
+    }
+  }
+  .articleList{
+    min-height: 35rem;
+    .box{
+      width: 55%;
+      min-height: 7rem;
+      margin: 0 auto;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid $color-3;
+      position: relative;
+      cursor: pointer;
+      .img{
+        max-width: 45%;
+        img{
+          width: 100%;
+        }
+      }
+      h2 {
+        font-size: 1.7rem;
+        margin: 5px 0 0 0;
+        color: $color-1;
+        font-weight: 500;
+      }
+      h3{
+        font-size: 1.2rem;
+        margin: 10px 0 20px 0;
+        color: $color-2;
+        font-weight: 300;
+      }
+      span{
+        color: $color-2;
+        display: block;
+        font-size: 14px;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+      &:hover{
+        h2{
+          color: $highlight-color-1;
+        }
       }
     }
   }

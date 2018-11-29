@@ -15,6 +15,6 @@ func SendBadResponse(c *gin.Context, err string) {
 }
 //设置cookie
 func SetCookie(c *gin.Context, name string, value string) {
-	c.SetCookie(name, value, config.BaseConf.CooKieMaxAge,"/", "", false, true)
+	c.SetCookie(name, value, config.BaseConf.CooKieMaxAge * 60 * 60,"/", "", false, true)
 }
 

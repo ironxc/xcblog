@@ -4,7 +4,7 @@ import Input from 'src/components/Input'
 import HomeLink from 'src/components/HomeLink'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
-
+import { routerRedux } from 'dva/router'
 import { selectBingimg } from 'src/models/init/selector'
 import { createStructuredSelector } from 'reselect'
 
@@ -23,9 +23,7 @@ export default class Login extends React.Component {
   }
   constructor (props) {
     super(props)
-    const searchQ = queryString.parse(this.props.location.search)
     this.state = {
-      login: !searchQ.type || searchQ.type === 'signin',
       signin: {
         username: {
           value: '',
@@ -55,6 +53,11 @@ export default class Login extends React.Component {
         },
       },
     }
+  }
+  componentDidMount () {
+    this.props.dispatch({
+      type: 'init/getBingImg',
+    })
   }
   onSingin = (key) => (value) => {
     if(value.length < 4 || value.length > 20) {
@@ -141,10 +144,8 @@ export default class Login extends React.Component {
         break
     }
   }
-  handleActive = (bool) => () => {
-    this.setState({
-      login: bool,
-    })
+  handleActive = (url) => () => {
+    this.props.dispatch(routerRedux.push(url))
   }
   signin = () => {
     const { signin: { username, password} } = this.state
@@ -174,7 +175,9 @@ export default class Login extends React.Component {
     })
   }
   submit = () => {
-    if (this.state.login) {
+    const searchQ = queryString.parse(this.props.location.search)
+    const login = !searchQ.type || searchQ.type === 'signin'
+    if (login) {
       this.signin()
     } else {
       this.signup()
@@ -182,8 +185,10 @@ export default class Login extends React.Component {
   }
   render () {
     const styles = require('./index.scss')
-    const { login, signin, signup } = this.state
+    const { signin, signup } = this.state
     const { bingimg } = this.props
+    const searchQ = queryString.parse(this.props.location.search)
+    const login = !searchQ.type || searchQ.type === 'signin'
     return (
       <div className={styles.login} style={{
         backgroundImage: `url(${bingimg})`,
@@ -195,10 +200,10 @@ export default class Login extends React.Component {
           <div className={styles.nav}>
             <span className={classnames({
               [styles.active]: login,
-            })} onClick={this.handleActive(true)}>登录</span>
+            })} onClick={this.handleActive('/login')}>登录</span>
             <span className={classnames({
               [styles.active]: !login,
-            })} onClick={this.handleActive(false)}>注册</span>
+            })} onClick={this.handleActive('login?type=signup')}>注册</span>
           </div>
           <div className={styles.signin} style={{
             display: login ? 'block' : 'none',

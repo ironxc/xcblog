@@ -9,22 +9,17 @@ import { connect } from 'react-redux'
 import Login from 'src/containers/Login'
 import NotFound from 'src/containers/NotFound'
 import PropTypes from 'prop-types'
+import LoadingBar from 'src/components/LoadingBar'
 @withRouter
-@connect()
+@connect((state) => ({
+  loading: state.loading.global,
+}))
 class App extends Component {
   static propTypes = {
     userInfo: PropTypes.object,
+    loading: PropTypes.bool,
   }
   componentDidMount () {
-    this.props.dispatch({
-      type: 'init/getAllTags',
-    })
-    this.props.dispatch({
-      type: 'init/getBingImg',
-    })
-    this.props.dispatch({
-      type: 'init/getImageList',
-    })
     this.props.dispatch({
       type: 'init/getUserInfo',
     })
@@ -33,6 +28,7 @@ class App extends Component {
     const styles = require('./index.scss')
     return (
       <div className={styles.app}>
+        <LoadingBar show={this.props.loading}/>
         <Switch>
           <Redirect from="/" exact to={'/home'} />
           <Route path="/home" component={Home}></Route>

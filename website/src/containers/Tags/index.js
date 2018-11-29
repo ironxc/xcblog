@@ -17,9 +17,11 @@ export default class Tags extends React.Component {
     dispatch: PropTypes.func.isRequired,
   }
   componentDidMount () {
-    this.props.dispatch({
-      type: 'init/getAllTags',
-    })
+    if(this.props.allTags.length <= 0 ){
+      this.props.dispatch({
+        type: 'init/getAllTags',
+      })
+    }
   }
   handleClick = (val) => () => {
     this.props.history.push(`/home?tag=${val}`)
