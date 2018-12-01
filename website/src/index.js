@@ -18,7 +18,7 @@ import 'rc-select/assets/index.css'
 const app = dva({
   history: createHistory(),
   onError: function (e) {
-    console.log('object====',e.message)
+    console.log(e.message)
   },
 })
 

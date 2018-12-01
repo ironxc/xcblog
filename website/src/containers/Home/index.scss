@@ -4,10 +4,10 @@
   box-sizing: border-box;
   border-top: 1px solid transparent;
   h1{
-    width: 22.5%;
-    text-align: center;
+    width:100%;
+    text-align: left;
     font-size: 2.6rem;
-    margin: 2rem 0 10px 0;
+    padding-left: 8%;
   }
   .navbar{
     height: 5rem;
@@ -33,15 +33,15 @@
           padding: 0 .5rem;
           margin:0 5px;
           text-decoration: none;
+          font-size: 1.2rem;
         }
       }
     }
   }
   .pageBtns{
-    padding: 5px;
+    padding: 5px 20px 5px 5px;
     width: 55%;
     margin: 0 auto;
-    padding-right: 20px;
     overflow: hidden;
     text-align: right;
     span{
@@ -49,7 +49,7 @@
       display:inline-block;
       color: $color-1;
       padding: 20px 10px 0 10px;
-      font-size: 16px;
+      font-size: 1.2rem;
     }
     .disable{
       color:$color-2;
@@ -66,7 +66,6 @@
     min-height: 35rem;
     .box{
       width: 55%;
-      min-height: 7rem;
       margin: 0 auto;
       border-top: 1px solid transparent;
       border-bottom: 1px solid $color-3;
@@ -86,14 +85,14 @@
       }
       h3{
         font-size: 1.2rem;
-        margin: 10px 0 20px 0;
+        margin: 10px 0 0 0;
         color: $color-2;
         font-weight: 300;
       }
       span{
         color: $color-2;
         display: block;
-        font-size: 14px;
+        font-size: 1rem;
         letter-spacing: 1px;
         font-weight: bold;
       }
@@ -101,6 +100,27 @@
         h2{
           color: $highlight-color-1;
         }
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    h1{
+      text-align: right;
+      padding-left: 0;
+      padding-right: 30px;
+    }
+    .pageBtns{
+      width: 100%;
+      padding: .5rem;
+    }
+    .navbar{
+      padding: .5rem;
+    }
+    .articleList{
+      padding: 0 10px;
+      .box{
+        width: 100%;
+        box-sizing: border-box;
       }
     }
   }

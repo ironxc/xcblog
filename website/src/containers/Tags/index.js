@@ -26,6 +26,7 @@ export default class Tags extends React.Component {
   handleClick = (val) => () => {
     this.props.history.push(`/home?tag=${val}`)
   }
+
   render () {
     const { allTags } = this.props
     const styles = require('./index.scss')
@@ -37,8 +38,8 @@ export default class Tags extends React.Component {
         <div className={styles.content}>
           {
             allTags.map(t => (<span style={{ 
-              fontSize: `${12 + t.num}px`,
-            }} onClick={this.handleClick(t.value)}>{t.value}</span>))
+              fontSize: `${12 + t.num * 2}px`,
+            }} onClick={this.handleClick(t.value)} key={t.value}>{t.value}</span>))
           }
         </div>
       </div>

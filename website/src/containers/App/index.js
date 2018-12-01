@@ -27,7 +27,7 @@ class App extends Component {
   render () {
     const styles = require('./index.scss')
     return (
-      <div className={styles.app}>
+      <div className={styles.app} style={{ height: document.documentElement.offsetHeight}}>
         <LoadingBar show={this.props.loading}/>
         <Switch>
           <Redirect from="/" exact to={'/home'} />

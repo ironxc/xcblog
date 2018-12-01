@@ -7,6 +7,14 @@ body {
   font-family: sans-serif;
   height: 100%;
 }
+@media screen and (max-width: 768px) {
+    html {
+      font-size: 12px;
+    }
+}
+* {
+  box-sizing: border-box;
+}
 #root{
   height: 100%;
 }

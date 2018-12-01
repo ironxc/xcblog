@@ -4,6 +4,7 @@
   height: 100%;
   position: relative;
   background-size: 100% 100%;
+  padding-top: 14rem;
   .content{
     width: 20rem;
     position: relative;
@@ -11,13 +12,12 @@
     padding: 1rem 2rem;
     border-radius: 5px;
     box-sizing: border-box;
-    margin: 8rem auto 0 auto;
+    margin: 0 auto;
     transition: height 2s ;
     opacity: .9;
     .nav{
       text-align: center;
       padding: 8px;
-      border-bottom: 1px dashed;
       span{
         font-size: 1.2rem;
         margin: 0 5px;
@@ -56,13 +56,19 @@
     }
   }
   .homelink{
-    height: 12rem;
-    padding-top: 4rem;
-    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 4rem;
+    width: 100%;
     text-align: right;
-    padding-right: 10rem;
+    padding-right: 4rem;
     a{
       color: $color-3;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .content {
+      width: 80%;
     }
   }
 }

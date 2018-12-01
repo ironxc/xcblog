@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-import { ParseMardown } from 'src/utils'
+import { ParseMardown, isMobile } from 'src/utils'
 import SaveForm from './SaveForm'
 import UploadImage from './UploadImage'
 import { Motion, spring } from 'react-motion'
@@ -113,7 +113,6 @@ export default class Editor extends Component {
     }
   }
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps)
     this.setState({
       focuse: false,
       markdown: nextProps.data ? nextProps.data.content : '',
@@ -342,9 +341,10 @@ export default class Editor extends Component {
   render () {
     const styles = require('./index.scss')
     const { focuse, markdown, parsedData, 
-      popups, fullScreen, preview, 
+      popups, preview, 
       title, description, logo,
       tags, options} = this.state
+    const fullScreen = isMobile() ? true : this.state.fullScreen
     return (
       <div className={styles.editor}>
         <Motion style={{ width: spring(fullScreen ? 100 : 50, springSetting) }}>
@@ -366,10 +366,12 @@ export default class Editor extends Component {
                       fullScreen && <span onClick={this.handlePreview}><i className="iconfont icon-yanjing"></i></span>
                     }
                     {
-                      fullScreen
-                        ? <span onClick={this.handleFullscreen}>
-                          <i className="iconfont icon-msnui-zoom-finger"></i></span>
-                        : <span onClick={this.handleFullscreen}><i className="iconfont icon-quanping"></i></span>
+                      !fullScreen &&
+                        <span onClick={this.handleFullscreen}><i className="iconfont icon-quanping"></i></span>
+                    }
+                    {
+                      fullScreen && !isMobile() && <span onClick={this.handleFullscreen}>
+                        <i className="iconfont icon-msnui-zoom-finger"></i></span>
                     }
                   </div>
                 </header>

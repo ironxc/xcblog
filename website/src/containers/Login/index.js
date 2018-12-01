@@ -43,7 +43,7 @@ export default class Login extends React.Component {
           value: '',
           error: '',
         },
-        password2: {
+        reenterPassword: {
           value: '',
           error: '',
         },
@@ -83,6 +83,7 @@ export default class Login extends React.Component {
     }
   }
   onSingup = (key) => (value) => {
+    const { signup: { password, reenterPassword } } = this.state
     switch(key){
       case 'username':
         this.setState({
@@ -96,39 +97,30 @@ export default class Login extends React.Component {
         })
         break
       case 'password':
-        this.setState({
+        return this.setState({
           signup: {
             ...this.state.signup,
             password: {
               value,
-              error: (value.length < 4 || value.length > 20) ? '密码长度必须是4到20个字符' : '',
+              error: (value.length < 6 || value.length > 20) ? '用户名长度必须是4到20个字符' : '',
+            },
+            reenterPassword: {
+              ...reenterPassword,
+              error: password.value !== value ? '两次输入的密码不一致' : '',
             },
           },
         })
-        break
-      case 'password2':
-        if(this.state.signup.password.value !== value) {
-          return this.setState({
-            signup: {
-              ...this.state.signup,
-              password2: {
-                value,
-                error: '两次输入的密码不一致',
-              },
-            },
-          })
-        }
-        
-        this.setState({
+      case 'reenterPassword':
+        return this.setState({
           signup: {
             ...this.state.signup,
-            password2: {
+            reenterPassword: {
+              ...reenterPassword,
               value,
-              error: (value.length < 4 || value.length > 20) ? '密码长度必须是4到20个字符' : '',
+              error: password.value !== value ? '两次输入的密码不一致' : '',
             },
           },
         })
-        break
       case 'email':
         this.setState({
           signup: {
@@ -149,38 +141,27 @@ export default class Login extends React.Component {
   }
   signin = () => {
     const { signin: { username, password} } = this.state
-    if(username.error || password.error) {
-      console.log('err')
+    if(!username.error && !password.error) {
+      this.props.dispatch({
+        type: 'init/signIn',
+        payload: {
+          password: password.value,
+          username: username.value,
+        },
+      })
     }
-    this.props.dispatch({
-      type: 'init/singIn',
-      payload: {
-        password: password.value,
-        username: username.value,
-      },
-    })
   }
   signup = () => {
     const { signup: { username, password, email } } = this.state
-    if (username.error || password.error || email.error) {
-      console.log('err')
-    }
-    this.props.dispatch({
-      type: 'init/signUp',
-      payload: {
-        password: password.value,
-        username: username.value,
-        email: email.value,
-      },
-    })
-  }
-  submit = () => {
-    const searchQ = queryString.parse(this.props.location.search)
-    const login = !searchQ.type || searchQ.type === 'signin'
-    if (login) {
-      this.signin()
-    } else {
-      this.signup()
+    if (!username.error & !password.error & !email.error) {
+      this.props.dispatch({
+        type: 'init/signUp',
+        payload: {
+          password: password.value,
+          username: username.value,
+          email: email.value,
+        },
+      })
     }
   }
   render () {
@@ -250,12 +231,12 @@ export default class Login extends React.Component {
             </div>
             <div className={styles.inputWrap}>
               <Input 
-                value={signup.password2.value}
-                error={signup.password2.error}
+                value={signup.reenterPassword.value}
+                error={signup.reenterPassword.error}
                 label="确认密码" placeholder="请输入确认密码"
-                onChange={this.onSingup('password2')}
+                onChange={this.onSingup('reenterPassword')}
                 type="password"
-                id="signuppassword2"/>
+                id="signupreenterPassword"/>
             </div>
             <div className={styles.inputWrap}>
               <Input 
@@ -266,7 +247,7 @@ export default class Login extends React.Component {
                 id="signupemail"/>
             </div>
           </div>
-          <div className={styles.btn} onClick={this.submit}>确认</div>
+          <div className={styles.btn} onClick={ login ? this.signin : this.signup }>确认</div>
         </div>
       </div>
     )

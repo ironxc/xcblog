@@ -2,10 +2,14 @@
 
 .tags {
   height: 100%;
+  padding-top: 10rem;
   .homelink{
-    height: 12rem;
-    padding: 4rem 0 0 8rem;
-    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 4rem;
+    width: 100%;
+    text-align: right;
+    padding-right: 4rem;
   }
   .content{
     width: 60%;
@@ -16,11 +20,18 @@
       display: inline-block;
       cursor: pointer;
       @extend .borderAnimat;
+      color: $color-2;
       &:hover{
         &::after{
           transform: scaleX(1);
         }
       }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .content{
+      width: 100%;
+      padding: 1rem 3rem 2rem 3rem;
     }
   }
 }

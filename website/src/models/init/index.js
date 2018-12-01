@@ -75,7 +75,7 @@ export default function (initState = init, namespace = ns) {
           },
         })
       },
-      *singIn (action, { put, call }) {
+      *signIn (action, { put, call }) {
         const userInfo = yield call(request.post, '/api/signin', action.payload)
         yield put({
           type: 'updateState',
@@ -85,7 +85,8 @@ export default function (initState = init, namespace = ns) {
         })
         yield put(routerRedux.push('/home'))
       },
-      *singUp (action, { put, call }) {
+      *signUp (action, { put, call }) {
+        console.log(action)
         const userInfo = yield call(request.post, '/api/signup', action.payload)
         yield put({
           type: 'updateState',
