@@ -16,3 +16,4 @@ yarn-error.log*
 /.vscode
 /images
 /vendor
+/logs

@@ -1,2 +1,0 @@
-[GIN] 2018/12/08 - 18:26:54 | 200 |     203.924µs |       127.0.0.1 | GET      /api/userinfo
-[GIN] 2018/12/08 - 18:26:54 | 500 |    3.345306ms |       127.0.0.1 | GET      /api/articlelist?page=1&perPage=5&tag=
