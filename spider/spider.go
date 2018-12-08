@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/xichengh/xcblog/model"
 	"github.com/globalsign/mgo/bson"
-	// "fmt"
+	"fmt"
   "net/http"
   "io/ioutil"
   "regexp"
@@ -23,9 +23,9 @@ func FetchBinBgImg() string {
 	  resp, _ := http.Get(url)
     body, _ := ioutil.ReadAll(resp.Body)
     defer resp.Body.Close()
-    allImgTags := exp1.FindAllString(string(body), -1)
+		allImgTags := exp1.FindAllString(string(body), -1)
     if(len(allImgTags) > 0) {
-      imgPath = url + strings.Split(allImgTags[len(allImgTags) - 1: len(allImgTags)][0], "\"")[1]
+      imgPath = url + strings.Split(allImgTags[len(allImgTags) - 1: len(allImgTags)][0], "\"")[3]
     }
     if(imgPath != "") {
 			err = model.DB.C("bingImages").Insert(&model.BingImage {
