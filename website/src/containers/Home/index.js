@@ -100,8 +100,8 @@ export default class Home extends Component {
     return list.map((item, index) => ({
       data: item,
       style: { 
-        opacity: spring(1, { stiffness: 150 - index * 20, damping: 15 }), 
-        top: spring(0, { stiffness: 150 - index * 20, damping: 15 })},
+        opacity: spring(1, { stiffness: 150 - index * 20, damping: 18 }), 
+        top: spring(0, { stiffness: 150 - index * 20, damping: 18 })},
       key: item.id,
     }))
   }

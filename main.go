@@ -3,14 +3,26 @@ package main
 import (
 	"github.com/xichengh/xcblog/router"
 	"fmt"
+	"os"
+	"io"
 	"github.com/xichengh/xcblog/config"
 	"github.com/gin-gonic/gin"
-	// mw "code/middleware"
 )
 
 func main() {
 	fmt.Println("gin.Version: ", gin.Version)
-
+	if config.BaseConf.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+		// Disable Console Color, you don't need console color when writing the logs to file.
+		gin.DisableConsoleColor()
+		// Logging to a file.
+		logFile, err := os.OpenFile(config.BaseConf.LogFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Printf(err.Error())
+			os.Exit(-1)
+		}
+		gin.DefaultWriter = io.MultiWriter(logFile)
+	}
 	// Creates a router without any middleware by default
 	app := gin.New()
 

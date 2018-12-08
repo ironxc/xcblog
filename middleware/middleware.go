@@ -4,7 +4,7 @@ import (
 	// "fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/xichengh/xcblog/pkg"
+	"github.com/xichengh/xcblog/utils"
 	"github.com/xichengh/xcblog/config"
 	"github.com/globalsign/mgo/bson"
 	"time"
@@ -31,10 +31,10 @@ func CreateJwtToken(c *gin.Context, ID bson.ObjectId, UserName string) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(config.BaseConf.TokenSecret))
 	if(err != nil) {
-		pkg.SendBadResponse(c, "服务端错")
+		utils.SendBadResponse(c, "服务端错")
 		return
 	}
-	pkg.SetCookie(c, "xtoken", tokenString)
+	SetCookie(c, "xtoken", tokenString)
 }
 //解析jwt
 func ParseJwtToken(tokenString string) (bson.ObjectId, string, bool) {
@@ -49,14 +49,14 @@ func ParseJwtToken(tokenString string) (bson.ObjectId, string, bool) {
 func SigninRequired(c *gin.Context) {
 	token, err := c.Cookie("xtoken")
 	if( err != nil) {
-		pkg.SendBadResponse(c, "未登录")
+		utils.SendBadResponse(c, "未登录")
 		return
 	}
 
 	ID, UserName, valid := ParseJwtToken(token)
 	user := model.Author{ UserName:UserName, ID:ID}
 	if !valid {
-		pkg.SendBadResponse(c, "未登录")
+		utils.SendBadResponse(c, "未登录")
 		return
 	}
 	c.Set("user", user)
@@ -67,7 +67,7 @@ func SigninRequired(c *gin.Context) {
 func RefreshToken(c *gin.Context) {
 	token, err := c.Cookie("xtoken")
 	if( err == nil) {
-		pkg.SetCookie(c, "xtoken", token)
+		SetCookie(c, "xtoken", token)
 	}
 	c.Next()
 }
@@ -82,4 +82,8 @@ func ErrorHandler() gin.HandlerFunc {
 		c.Abort()
 		return
 	}
+}
+//设置cookie
+func SetCookie(c *gin.Context, name string, value string) {
+	c.SetCookie(name, value, config.BaseConf.CooKieMaxAge * 60 * 60,"/", "", false, true)
 }

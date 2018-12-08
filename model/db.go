@@ -2,13 +2,19 @@ package model
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/xichengh/xcblog/config"
+	"fmt"
 )
 
 var DB *mgo.Database
 
 func initMongo() {
-	session, _ := mgo.Dial("localhost:27017")
-	DB = session.DB("blog")
+	fmt.Println(config.MongoConf.Url)
+	session, err := mgo.Dial(config.MongoConf.Url)
+	if( err != nil) {
+		fmt.Println("========", err.Error())
+	}
+	DB = session.DB(config.MongoConf.Database)
 }
 
 func init() {

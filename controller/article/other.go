@@ -4,7 +4,7 @@ import (
 	// "fmt"
 	"net/http"
 	"github.com/xichengh/xcblog/model"
-	"github.com/xichengh/xcblog/pkg"
+	"github.com/xichengh/xcblog/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -25,7 +25,7 @@ func GetTags(c *gin.Context) {
 	}).MapReduce(job, &resTags)
 
 	if( err != nil) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	} else {
 			c.JSON(http.StatusOK, gin.H{

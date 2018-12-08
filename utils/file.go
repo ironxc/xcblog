@@ -1,4 +1,4 @@
-package pkg
+package utils
 
 import (
     "os"
@@ -8,6 +8,10 @@ import (
 	"encoding/hex"
 	"io"
 )
+//新建文件
+// func MkFile(file string) error {
+
+// }
 // 新建文件夹
 func MkDir(src string) error {
     err := os.MkdirAll(src, os.ModePerm)
@@ -34,3 +38,4 @@ func UniqueId() string {
 	}
 	return EncodeMD5(base64.URLEncoding.EncodeToString(b))
 }
+

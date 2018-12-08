@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/xichengh/xcblog/pkg"
+	"github.com/xichengh/xcblog/utils"
 	// "fmt"
 	"net/http"
 	"time"
@@ -44,7 +44,7 @@ func SaveUser(data SignUpPostData) (UserRes,error){
 		Signature: "这个人啥也没留",
 		Avatar: "",
 		UserName:data.UserName,
-		PassWord:pkg.EncodeMD5(data.PassWord),
+		PassWord:utils.EncodeMD5(data.PassWord),
 	}
 	err := model.DB.C("users").Insert(&UserData)
 	ResData := UserRes{
@@ -63,14 +63,14 @@ func SignIn(c *gin.Context) {
 	var postData SignInPostData
 	var result model.User
 	if err := c.BindJSON(&postData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	if findErr := model.DB.C("users").Find(bson.M{
 		"username": postData.UserName,
-		"password": pkg.EncodeMD5(postData.PassWord),
+		"password": utils.EncodeMD5(postData.PassWord),
 	}).One(&result); findErr != nil {
-		pkg.SendBadResponse(c, "账号或密码错误")
+		utils.SendBadResponse(c, "账号或密码错误")
 		return
 	}
 	userData := UserRes{
@@ -93,20 +93,20 @@ func SignUp(c *gin.Context) {
 	var postData SignUpPostData
 	var result UserRes
 	if err := c.BindJSON(&postData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	if findErr := model.DB.C("users").Find(bson.M{
 		"username": postData.UserName,
 	}).One(&result); findErr == nil {
-		pkg.SendBadResponse(c, "用户名已存在")
+		utils.SendBadResponse(c, "用户名已存在")
 		return
 	}
 	UserData, saveErr := SaveUser(postData)
 	mw.CreateJwtToken(c, UserData.ID, UserData.UserName)
 
 	if saveErr != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -118,13 +118,13 @@ func Userinfo(c *gin.Context) {
 	var result UserRes
 	user, exit := c.Get("user")
 	if !exit {
-		pkg.SendBadResponse(c, "未登录")
+		utils.SendBadResponse(c, "未登录")
 		return
 	}
 	if findErr := model.DB.C("users").Find(bson.M{
 		"_id": user.(model.Author).ID,
 	}).One(&result); findErr != nil {
-		pkg.SendBadResponse(c, "未登录")
+		utils.SendBadResponse(c, "未登录")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

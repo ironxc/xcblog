@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/xichengh/xcblog/model"
-	"github.com/xichengh/xcblog/pkg"
+	"github.com/xichengh/xcblog/utils"
 	"github.com/xichengh/xcblog/config"
 	"github.com/gin-gonic/gin"
 	// "github.com/globalsign/mgo"
@@ -34,7 +34,7 @@ func GetImage(c *gin.Context) {
 	allErr := model.DB.C("images").Find(nil).Sort("-date").All(&allimageList)
 	
 	if(err != nil || allErr!= nil) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -49,39 +49,39 @@ func GetImage(c *gin.Context) {
 func UploadImage(c *gin.Context) {
 	image, err := c.FormFile("image")
 	if( err != nil) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	imageType := strings.Split(image.Header["Content-Type"][0], "/")[1]
 	fmt.Println(image.Size)
 	if( image.Size > 1024 * 1024 * config.BaseConf.MaxMultipartMemory) {
-		pkg.SendBadResponse(c, "图片太大了")
+		utils.SendBadResponse(c, "图片太大了")
 		return
 	}
-	imageName := pkg.UniqueId() + "." + imageType
+	imageName := utils.UniqueId() + "." + imageType
 	pwd, pathErr := os.Getwd()
 	if( pathErr != nil) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	fullPath := pwd + "/images/" + imageName
-	if NotExist := pkg.CheckNotExist(pwd + "/images"); NotExist {
-		err := pkg.MkDir(pwd + "/images")
+	if NotExist := utils.CheckNotExist(pwd + "/images"); NotExist {
+		err := utils.MkDir(pwd + "/images")
 		if(err != nil) {
-			pkg.SendBadResponse(c, "服务端错误")
+			utils.SendBadResponse(c, "服务端错误")
 			return
 		}
 	}
 	saveErr := c.SaveUploadedFile(image, fullPath)
 	if( saveErr != nil ) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	if err = model.DB.C("images").Insert(&model.SaveImage{
 		Path: config.BaseConf.ImgPath + "/" + imageName,
 		Date: time.Now(),
 	}); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

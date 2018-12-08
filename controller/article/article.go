@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"net/http"
 	"github.com/xichengh/xcblog/model"
-	"github.com/xichengh/xcblog/pkg"
+	"github.com/xichengh/xcblog/utils"
 	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo/bson"
@@ -63,13 +63,13 @@ func GetArticleDetail(c *gin.Context) {
 	if findErr := model.DB.C("articles").Find(bson.M{
 		"_id": bson.ObjectIdHex(id),
 	}).One(&resData); findErr != nil {
-		pkg.SendBadResponse(c, "找不到该数据")
+		utils.SendBadResponse(c, "找不到该数据")
 		return
 	}
 	if findErr := model.DB.C("users").Find(bson.M{
 		"username": resData.Author.UserName,
 	}).One(&authorData); findErr != nil {
-		pkg.SendBadResponse(c, "作者不存在")
+		utils.SendBadResponse(c, "作者不存在")
 		return
 	}
 	resData.Author = authorData
@@ -83,11 +83,11 @@ func CreateArticle(c *gin.Context) {
 	var postData PostArticle
 	user, exist := c.Get("user")
 	if(!exist) {
-		pkg.SendBadResponse(c, "未登录")
+		utils.SendBadResponse(c, "未登录")
 		return
 	}
 	if err := c.BindJSON(&postData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	articleData := model.Article{
@@ -104,7 +104,7 @@ func CreateArticle(c *gin.Context) {
 		Logo:        postData.Logo,
 	}
 	if err := model.DB.C("articles").Insert(&articleData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -117,7 +117,7 @@ func DeleteArticle(c *gin.Context) {
 	if findErr := model.DB.C("articles").Remove(bson.M{
 		"_id": bson.ObjectIdHex(id),
 	}); findErr != nil {
-		pkg.SendBadResponse(c, "找不到该数据")
+		utils.SendBadResponse(c, "找不到该数据")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -129,7 +129,7 @@ func UpdateArticle(c *gin.Context) {
 	var postData PostArticle
 	id := c.Param("id")
 	if err := c.BindJSON(&postData); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	if err := model.DB.C("articles").Update(bson.M{
@@ -144,7 +144,7 @@ func UpdateArticle(c *gin.Context) {
 		Tags:        postData.Tags,
 		Logo:        postData.Logo,
 	}}); err != nil {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -183,7 +183,7 @@ func GetArticleList(c *gin.Context) {
 	allErr := model.DB.C("articles").Find(findQuery).All(&allArticlelist)
 	
 	if(err != nil || allErr != nil ) {
-		pkg.SendBadResponse(c, "服务端错误")
+		utils.SendBadResponse(c, "服务端错误")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
