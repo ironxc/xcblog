@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/xichengh/xcblog/model"
 	"github.com/globalsign/mgo/bson"
-	"fmt"
   "net/http"
   "io/ioutil"
   "regexp"
