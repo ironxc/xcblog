@@ -168,12 +168,17 @@ export default class Home extends Component {
           }
         </div>
         <div className={styles.pageBtns}>
-          <span
-            onClick={this.loadMore('newer')}
-            className={page <= 1 ? styles.disable : styles.able}>上一页</span>
-          <span
-            onClick={this.loadMore('previous')}
-            className={Math.ceil(count / perPage) <= page ? styles.disable : styles.able}>下一页</span>
+          {
+            page > 1 && <span
+              onClick={this.loadMore('newer')}
+              className={page <= 1 ? styles.disable : styles.able}>上一页</span>
+          }
+          {
+            count > page * perPage &&
+            <span
+              onClick={this.loadMore('previous')}
+              className={Math.ceil(count / perPage) <= page ? styles.disable : styles.able}>下一页</span>
+          }
         </div>
         <div className={styles.navbar}>
           <HomeLink />
