@@ -60,7 +60,7 @@ const mapStateToProps = createStructuredSelector({
 @connect(mapStateToProps)
 export default class Editor extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   }
   constructor (props){
@@ -99,6 +99,8 @@ export default class Editor extends Component {
   }
   componentDidMount () {
     if (this.props.allTags.length <= 0) {
+      console.log('aaa===============')
+
       this.props.dispatch({
         type: 'init/getAllTags',
       })
@@ -113,6 +115,7 @@ export default class Editor extends Component {
     }
   }
   componentWillReceiveProps (nextProps) {
+    console.log('===========================')
     this.setState({
       focuse: false,
       markdown: nextProps.data ? nextProps.data.content : '',
