@@ -4,11 +4,10 @@
  */
 import queryString from 'query-string'
 
-
-async function request(req) {
+async function request(req: any) {
   const res = await req
   if (!res.ok) {
-    return Promise.reject('网路错误')
+    return Promise.reject('服务端错误')
   }
   const resdata = await await res.json()
   if (resdata.msg === 'success') {
@@ -17,7 +16,6 @@ async function request(req) {
     return Promise.reject(resdata.msg)
   }
 }
-
 class Client {
   /**
    * send http GET request
@@ -27,7 +25,7 @@ class Client {
    * @param  {Object} [options] fetch options, see https://github.github.io/fetch/ for more details
    * @return {Promise}
    */
-  get(url, params, options) {
+  get(url: any, params?: any, options?: any) {
     const formedUrl = params ? `${url}?${queryString.stringify(params)}` : url
     options = options || {}
     options.headers = options.headers || {}
@@ -47,7 +45,7 @@ class Client {
    * @param  {Object} [options] fetch options, see https://github.github.io/fetch/ for more details
    * @return {Promise}
    */
-  post(url, data, options) {
+  post(url: any, data?: any, options?: any) {
     const isFormData = data instanceof FormData
     const headers = options ? options.headers : {}
     if (!isFormData) {
@@ -71,7 +69,7 @@ class Client {
    * @param  {Object} [options] fetch options, see https://github.github.io/fetch/ for more details
    * @return {Promise}
    */
-  put(url, data, options) {
+  put(url: any, data?: any, options?: any) {
     options = options || {}
     options.headers = options.headers || {}
     const req = fetch(url, {
@@ -94,7 +92,7 @@ class Client {
    * @param  {Object} [options] fetch options, see https://github.github.io/fetch/ for more details
    * @return {Promise}
    */
-  del(url, data, options) {
+  del(url: any, data?: any, options?: any) {
     options = options || {}
     options.headers = options.headers || {}
     const req = fetch(url, {

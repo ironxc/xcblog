@@ -8,35 +8,24 @@ import (
   "net/http"
   "io/ioutil"
   "regexp"
-  "strings"
+	"strings"
 )
-
+var baseUrl = "https://cn.bing.com"
 func NowTimeStr() string {
 	return strings.Split(time.Now().String(), " ")[0]
 }
 func FetchBinBgImg() string {
-		var imgPath string
-		var err error
-    url := "https://www.bing.com"
-    exp1 := regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
-	  resp, _ := http.Get(url)
+		var reg = regexp.MustCompile(`(?Us)"bgLink"\s*rel="preload"\s*href="(.*)"`)
+		var imgPath string = ""
+	  resp, _ := http.Get(baseUrl)
     body, _ := ioutil.ReadAll(resp.Body)
-    defer resp.Body.Close()
-		allImgTags := exp1.FindAllString(string(body), -1)
-    if(len(allImgTags) > 0) {
-      imgPath = url + strings.Split(allImgTags[len(allImgTags) - 1: len(allImgTags)][0], "\"")[3]
-    }
-    if(imgPath != "") {
-			err = model.DB.C("bingImages").Insert(&model.BingImage {
-				Date: NowTimeStr(),
-				Value: imgPath,
-			})
+		defer resp.Body.Close()
+		if matchResult := reg.FindAllStringSubmatch(string(body[:]), -1); matchResult != nil {
+		for _, match := range matchResult {
+			imgPath = baseUrl + match[1]
 		}
-		if(err != nil){
-			return ""
-		} else {
-			return imgPath
-		}
+	}
+	return imgPath
 }
 
 func GetBingBg(c * gin.Context) {
