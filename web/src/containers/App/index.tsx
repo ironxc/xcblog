@@ -11,7 +11,7 @@ import Test from '../Test'
 import Editor from '../EditorPage'
 import Init from 'models/Init'
 import Article from 'src/containers/Article'
-
+import LoadingBar from 'components/LoadingBar/index'
 const InitStore = new Init()
 interface AppProps {
   history?: H.History
@@ -27,9 +27,10 @@ class App extends React.Component<AppProps, {}> {
     const styles = require('./index.scss')
     return (
       <div className={styles.app}>
+        <LoadingBar />
         <Provider inject={[InitStore]}>
           <Switch>
-            <Redirect from="/" exact to={'/editor'} />
+            <Redirect from="/" exact to={'/home'} />
             <Route path="/home" component={Home}/>
             <Route path="/article/:id" component={Article}></Route>
             <Route path="/login" component={Login}/>

@@ -9,10 +9,12 @@ import { Subscribe } from 'unstated'
 import Init, { Tag } from 'models/Init'
 import { ArticlePostData, ArticleData } from './index'
 import { Value } from 'slate'
+import * as H from 'history'
 
 export interface OuterProps extends Partial<ArticleData> {
   id: string
   value: Value
+  history: H.History
 }
 interface OwnProps extends OuterProps {
   options: string[]
@@ -33,15 +35,15 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
     this.state = {
       name: {
         value: props.name ? props.name : '',
-        label: '文章名',
+        label: '笔记名',
         error: '',
-        placeholder: '请输入文章名'
+        placeholder: '请输入笔记名'
       },
       description: {
         value: props.description ? props.description : '',
-        label: '文章描述',
+        label: '笔记描述',
         error: '',
-        placeholder: '请输入文章描述'
+        placeholder: '请输入笔记描述'
       },
       browseCount: 0,
       status: 1,
@@ -50,18 +52,39 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
       options: props.options ? props.options : []
     }
   }
+  componentWillReceiveProps(nextProps: OwnProps) {
+    this.state = {
+      name: {
+        value: nextProps.name ? nextProps.name : '',
+        label: '笔记名',
+        error: '',
+        placeholder: '请输入笔记名'
+      },
+      description: {
+        value: nextProps.description ? nextProps.description : '',
+        label: '笔记描述',
+        error: '',
+        placeholder: '请输入笔记描述'
+      },
+      browseCount: 0,
+      status: 1,
+      logo: nextProps.logo ? nextProps.logo : '',
+      tags: nextProps.tags ? nextProps.tags : [],
+      options: nextProps.options ? nextProps.options : []
+    }
+  }
   updateArticle = (data: ArticlePostData) => {
     R.put(`/api/article/${this.props.id}`, data)
       .then(res => {
-        console.log(res)
         this.props.getAllTags()
+        this.props.history.push(`/article/${res}`)
       })
   }
   createArticle = (data: ArticlePostData) => {
     R.post(`/api/article/${this.props.id}`, data)
       .then(res => {
-        console.log(res)
         this.props.getAllTags()
+        this.props.history.push(`/article/${res}`)
       })
   }
   onName = (event: React.ChangeEvent<HTMLInputElement>) => {

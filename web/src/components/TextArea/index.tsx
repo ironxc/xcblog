@@ -47,7 +47,7 @@ export default class TextArea extends React.Component<OuterProps, {}> {
     return(
       <div className={classnames(styles.textareaComponent, {
         [styles.focus]: focus || value,
-      })} >
+      })}>
         <label htmlFor={this.id} className={classnames({
           [styles.err]: error,
         })}>{this.getLabelTxt()}</label>

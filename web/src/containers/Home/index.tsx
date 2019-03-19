@@ -36,7 +36,7 @@ interface OwnProps extends OuterProps {
 }
 export class Home extends Component<OwnProps, OwnState> {
   state = {
-    perPage: 2,
+    perPage: 8,
     page: 1,
     list: [],
     count: 0,

@@ -5,14 +5,18 @@
 import queryString from 'query-string'
 
 async function request(req: any) {
+  const loading: any = document.getElementById('root-loading-bar')
+  if (loading) { loading.style.display = 'block'}
   const res = await req
   if (!res.ok) {
     return Promise.reject('服务端错误')
   }
   const resdata = await await res.json()
   if (resdata.msg === 'success') {
+    if (loading) { loading.style.display = 'none' }
     return Promise.resolve(resdata.data)
   } else {
+    if (loading) { loading.style.display = 'none' }
     return Promise.reject(resdata.msg)
   }
 }

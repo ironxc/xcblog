@@ -6,6 +6,7 @@ import { UserInfo } from 'models/Init'
 import { match } from 'react-router'
 import R from 'utils/request'
 import SaveForm, { OuterProps as FormProps } from './SaveForm'
+import * as H from 'history'
 
 /** 请求要提交的文章数据 */
 export interface ArticlePostData {
@@ -21,6 +22,7 @@ export interface ArticlePostData {
 
 interface OuterProps {
   match: match<any>
+  history: H.History
 }
 export interface ArticleData extends ArticlePostData{
   author: UserInfo,
@@ -62,7 +64,8 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
     const { data } = this.state
     let FormData: FormProps = {
       id: this.props.match.params.id,
-      value: this.state.value
+      value: this.state.value,
+      history: this.props.history
     }
     if(data) {
       FormData = {
@@ -75,7 +78,7 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
         <Editor onChange={this.handleChange} value={this.state.value} />
       </div>
       <div className={styles.form}>
-        <SaveForm {...FormData}/>
+        <SaveForm {...FormData} />
       </div>
     </div>
   }
