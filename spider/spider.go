@@ -15,7 +15,7 @@ func NowTimeStr() string {
 	return strings.Split(time.Now().String(), " ")[0]
 }
 func FetchBinBgImg() string {
-		var reg = regexp.MustCompile(`(?Us)"bgLink"\s*rel="preload"\s*href="(.*)"`)
+		var reg = regexp.MustCompile(`(?Us)<link\sid="bgLink"\s*rel="preload"\s*href="(.*)"`)
 		var imgPath string = ""
 	  resp, _ := http.Get(baseUrl)
     body, _ := ioutil.ReadAll(resp.Body)
@@ -27,7 +27,6 @@ func FetchBinBgImg() string {
 	}
 	return imgPath
 }
-
 func GetBingBg(c * gin.Context) {
 	var img model.BingImage
 	err := model.DB.C("bingImages").Find(bson.M{

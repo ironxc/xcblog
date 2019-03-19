@@ -8,10 +8,6 @@ interface OuterProps {
   tags: InitState['tags']
 }
 class TagsPage extends React.Component<OuterProps> {
-  // handleClick = (val) => () => {
-  //   this.props.history.push(`/home?tag=${val}`)
-  // }
-
   render () {
     const { tags } = this.props
     const styles = require('./index.scss')

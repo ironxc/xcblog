@@ -1,31 +1,24 @@
 import * as React from 'react'
 import classnames from 'classnames'
 import md5 from 'js-md5'
-export interface OuterProps {
-  value: string,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-  error?: string,
-  label?: string,
-  placeholder?: string,
-  type?: string
+
+interface OuterProps {
+  value: string
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  error?: string
+  label?: string
+  placeholder?: string
 }
-interface OwnState {
-  focus: boolean
-}
-export default class Input extends React.Component<OuterProps, OwnState>{
-  state = {
-    focus: false,
-  }
-  id: string = md5(Date.now() + String(Math.random())).slice(0, 24)
+export default class TextArea extends React.Component<OuterProps, {}> {
   static defaultProps: Partial<OuterProps> = {
     error: '',
     placeholder: 'placeholder',
     label: 'placeholder',
-    type: 'text',
   }
-  componentWillMount() {
-    
+  state = {
+    focus: false,
   }
+  id: string = md5(Date.now() + String(Math.random())).slice(0, 24)
   handleFocus = () => {
     this.setState({
       focus: true,
@@ -39,34 +32,33 @@ export default class Input extends React.Component<OuterProps, OwnState>{
   getLabelTxt = () => {
     const { placeholder, label, error, value } = this.props
     const { focus } = this.state
-    if (error) {
+    if( error ){
       return error
-    }
-    if (focus || value) {
+    } 
+    if (focus || value ){
       return label
     }
     return placeholder
   }
   render () {
     const styles = require('./index.scss')
-    const { value, type, error } = this.props
+    const { value, error } = this.props
     const { focus } = this.state
     return(
-      <div className={classnames(styles.input,{
-        [styles.focus]: focus  || error,
-      })}>
+      <div className={classnames(styles.textareaComponent, {
+        [styles.focus]: focus || value,
+      })} >
         <label htmlFor={this.id} className={classnames({
           [styles.err]: error,
-          [styles.labelTrasnform]: value || focus || error,
         })}>{this.getLabelTxt()}</label>
-        <div>
-          <input
+        <div className={styles.textareaWrap}>
+          <textarea
+            id={this.id}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-            id={this.id} 
-            type={type} 
-            value={value} 
-            onChange={this.props.onChange}/>
+            value={value}
+            onChange={this.props.onChange}>
+          </textarea>
         </div>
       </div>
     )

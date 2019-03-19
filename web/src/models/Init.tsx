@@ -1,6 +1,7 @@
 import { Container } from 'unstated'
 import R from 'utils/request'
-interface Info {
+
+export interface UserInfo {
   name: string
   id: string
   username: string
@@ -10,7 +11,7 @@ export interface Tag {
   value: string
 }
 export interface OwnState {
-  user?: Info
+  user?: UserInfo
   tags: Tag[]
 }
 export default class InitProvider extends Container<OwnState> {
@@ -24,7 +25,7 @@ export default class InitProvider extends Container<OwnState> {
   }
   getUserInfo = () => {
     R.get('/api/userinfo')
-      .then((user: Info) => {
+      .then((user: UserInfo) => {
         this.setState({
           user,
         })
@@ -38,5 +39,12 @@ export default class InitProvider extends Container<OwnState> {
         })
       })
       .catch(() => {})
+  }
+  setUser = (user: UserInfo, cb?: () => void) => {
+    this.setState({
+      user,
+    }, () => {
+      if(cb) { cb()}
+    })
   }
 }

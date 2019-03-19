@@ -5,8 +5,10 @@ import queryString from 'query-string'
 import R from 'utils/request'
 import HomeLink from 'components/HomeLink'
 import * as H from 'history'
+import Init, { UserInfo } from 'models/Init'
+import { Subscribe } from 'unstated'
 
-const emailValidReg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
+const EmailValidReg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
 interface OwnState {
   signin: {
     username: { [key: string]: string }
@@ -24,8 +26,11 @@ interface OuterProps {
   location: H.Location
   history: H.History
 }
-export default class Login extends React.Component<OuterProps, OwnState> {
-  constructor(props: OuterProps) {
+interface OwnProps extends OuterProps {
+  setUser: (user: UserInfo, cb?: () => void) => void
+}
+class Login extends React.Component<OwnProps, OwnState> {
+  constructor(props: OwnProps) {
     super(props)
     this.state = {
       signin: {
@@ -140,7 +145,7 @@ export default class Login extends React.Component<OuterProps, OwnState> {
             ...this.state.signup,
             email: {
               value,
-              error: !emailValidReg.test(value) ? '邮箱格式不正确' : '',
+              error: !EmailValidReg.test(value) ? '邮箱格式不正确' : '',
             },
           },
         })
@@ -154,26 +159,26 @@ export default class Login extends React.Component<OuterProps, OwnState> {
   }
   signin = () => {
     const { signin: { username, password} } = this.state
-    const { history } = this.props
+    const { history, setUser } = this.props
     if(!username.error && !password.error) {
       R.post('/api/signin', {
         password: password.value,
         username: username.value,
-      }).then(() => {
-        history.push('/home')
+      }).then((res: UserInfo) => {
+        setUser(res, () => { history.push('/home')})
       }).catch(() => { })
     }
   }
   signup = () => {
     const { signup: { username, password, email } } = this.state
-    const { history } = this.props
+    const { history, setUser } = this.props
     if (!username.error && !password.error && !email.error) {
       R.post('/api/signup', {
         password: password.value,
         username: username.value,
         email: email.value,
-      }).then(() => {
-        history.push('/home')
+      }).then((res: UserInfo) => {
+        setUser(res, () => { history.push('/home')})
       }).catch(() => {})
     }
   }
@@ -208,8 +213,7 @@ export default class Login extends React.Component<OuterProps, OwnState> {
                 error={signin.username.error}
                 label="账号"
                 placeholder="请输入账号" 
-                onChange={this.onSingin('username')}
-                id="signinusername"/>
+                onChange={this.onSingin('username')}/>
             </div>
             <div className={styles.inputWrap}>
               <Input 
@@ -218,8 +222,7 @@ export default class Login extends React.Component<OuterProps, OwnState> {
                 label="密码" 
                 placeholder="请输入密码" 
                 type="password" 
-                onChange={this.onSingin('password')}
-                id="signinpassword"/>
+                onChange={this.onSingin('password')}/>
             </div>
           </div>
           <div className={styles.signup} style={{
@@ -229,40 +232,49 @@ export default class Login extends React.Component<OuterProps, OwnState> {
               <Input 
                 value={signup.username.value}
                 error={signup.username.error}
-                label="账号" placeholder="请输入账号"
-                onChange={this.onSingup('username')}
-                id="signupusername"/>
+                label="账号"
+                placeholder="请输入账号"
+                onChange={this.onSingup('username')}/>
             </div>
             <div className={styles.inputWrap}>
               <Input 
                 value={signup.password.value}
                 error={signup.password.error}
-                label="密码" placeholder="请输入密码"
+                label="密码"
+                placeholder="请输入密码"
                 onChange={this.onSingup('password')}
-                type="password"
-                id="signuppassword"/>
+                type="password"/>
             </div>
             <div className={styles.inputWrap}>
               <Input 
                 value={signup.reenterPassword.value}
                 error={signup.reenterPassword.error}
-                label="确认密码" placeholder="请输入确认密码"
+                label="确认密码"
+                placeholder="请输入确认密码"
                 onChange={this.onSingup('reenterPassword')}
-                type="password"
-                id="signupreenterPassword"/>
+                type="password"/>
             </div>
             <div className={styles.inputWrap}>
               <Input 
                 value={signup.email.value}
                 error={signup.email.error}
-                label="邮箱" placeholder="请输入邮箱"
-                onChange={this.onSingup('email')}
-                id="signupemail"/>
+                label="邮箱"
+                placeholder="请输入邮箱"
+                onChange={this.onSingup('email')}/>
             </div>
           </div>
           <div className={styles.btn} onClick={ login ? this.signin : this.signup }>确认</div>
         </div>
       </div>
     )
+  }
+}
+export default class WrapLogin extends React.Component<OuterProps, {}> {
+  render() {
+    return (<Subscribe to={[Init]}>{
+      (init: any) => (
+        <Login {...this.props} setUser={init.setUser} />
+      )
+    }</Subscribe>)
   }
 }

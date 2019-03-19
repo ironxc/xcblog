@@ -1,0 +1,36 @@
+@import '../../theme/variables';
+
+.editorPage{
+  padding: 20px 0 20px 15%;
+  .editor{
+    width: 55%;
+  }
+  .form{
+    position: fixed;
+    width: 25%;
+    top: 20px;
+    right: 5%;
+  }
+}
+.saveForm{
+  width: 100%;
+  background-color: $white;
+  box-shadow: $box-shadow-1;
+  padding: 1rem 1.5rem;
+  .inputWrap{
+    margin-top: .5rem;
+  }
+  .btn {
+    margin-top: .5rem;
+    text-align: center;
+    padding: .6rem 0;
+    background-color: $highlight-color-1;
+    color: $color-3;
+    border-radius: 2px;
+    cursor: pointer;
+    &:hover{
+      color:$white;
+      border-radius: 5px;
+    }
+  }
+}

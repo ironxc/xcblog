@@ -4,7 +4,7 @@ import R from 'utils/request'
 import dayjs from 'dayjs'
 import HomeLink from 'components/HomeLink'
 import { Subscribe } from 'unstated'
-import Init, { OwnState as InitState } from 'models/Init'
+import Init, { UserInfo } from 'models/Init'
 import qs from 'query-string'
 import * as H from 'history'
 
@@ -28,10 +28,13 @@ interface OwnState {
   loading: boolean
 }
 interface OuterProps {
-  user: InitState['user']
   location: H.Location
+  history: H.History
 }
-export class Home extends Component<OuterProps, OwnState> {
+interface OwnProps extends OuterProps {
+  user: UserInfo
+}
+export class Home extends Component<OwnProps, OwnState> {
   state = {
     perPage: 2,
     page: 1,
@@ -68,6 +71,10 @@ export class Home extends Component<OuterProps, OwnState> {
     const { page, perPage } = this.state
     this.getArticles({ page: page + 1, perPage})
   }
+  handleGoDetail = (item: AritcleProfile) => (event: React.MouseEvent) => {
+    event.stopPropagation()
+    this.props.history.push(`/article/${item.id}`)
+  }
   renderArticleList = () => {
     const styles = require('./index.scss')
     const { list, loading, count, page, perPage } = this.state
@@ -81,7 +88,7 @@ export class Home extends Component<OuterProps, OwnState> {
             <div className={styles.box} style={{
               display: data.logo ? 'flex' : 'block',
               padding: data.logo ? '1.2rem .5rem' : '.5rem',
-            }} key={data.id}>
+            }} key={data.id} onClick={this.handleGoDetail(data)}>
               {
                 data.logo && <div className={styles.img}>
                   <img src={data.logo} alt="图片丢失" />
@@ -149,14 +156,11 @@ export class Home extends Component<OuterProps, OwnState> {
     );
   }
 }
-interface WrapProps {
-  location: H.Location
-}
-export default class Wrap extends Component<WrapProps> {
+export default class WrapHome extends React.Component<OuterProps, {}> {
   render() {
     return (<Subscribe to={[Init]}>{
-      (init: { state: InitState }) => (
-        <Home user={init.state.user} location={this.props.location}/>
+      (init: any) => (
+        <Home {...this.props} user={init.state.user} />
       )
     }</Subscribe>)
   }

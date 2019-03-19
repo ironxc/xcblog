@@ -4,6 +4,8 @@ import { Router } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 import './index.css';
 import 'theme/normalize.css'
+import 'theme/markdown.css'
+import 'theme/iconfont.css'
 import App from 'containers/App';
 import * as serviceWorker from './serviceWorker';
 const history = createHistory()
