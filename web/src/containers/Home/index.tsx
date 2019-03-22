@@ -7,7 +7,7 @@ import { Subscribe } from 'unstated'
 import Init, { UserInfo } from 'models/Init'
 import qs from 'query-string'
 import * as H from 'history'
-
+import Animate from 'components/Animate'
 interface AritcleProfile {
   name: string
   description: string
@@ -81,36 +81,40 @@ export class Home extends Component<OwnProps, OwnState> {
     if(list.length <= 0) {
       return null
     }
-    return (
-      <div className={styles.articleList}>
-        {
-          list.map((data: AritcleProfile) => (
-            <div className={styles.box} style={{
-              display: data.logo ? 'flex' : 'block',
-              padding: data.logo ? '1.2rem .5rem' : '.5rem',
-            }} key={data.id} onClick={this.handleGoDetail(data)}>
-              {
-                data.logo && <div className={styles.img}>
-                  <img src={data.logo} alt="图片丢失" />
+    return <React.Fragment>
+      {
+        list.map((data: AritcleProfile, index) => (<Animate key={data.id} duration={index * 80}>
+          {
+            (style: React.CSSProperties) => (
+              <div className={styles.box} style={{
+                display: data.logo ? 'flex' : 'block',
+                padding: data.logo ? '1.2rem .5rem' : '.5rem',
+                ...style,
+              }} key={data.id} onClick={this.handleGoDetail(data)}>
+                {
+                  data.logo && <div className={styles.img}>
+                    <img src={data.logo} alt="图片丢失" />
+                  </div>
+                }
+                <div style={{
+                  padding: data.logo ? '0 2.5rem' : '0',
+                }}>
+                  <span>{dayjs(data.updatedAt).format('MMM DD YYYY')}</span>
+                  <h2>{data.name}</h2>
+                  <h3>{data.description.substring(0, 60)}{data.description.length > 60 && '...'}</h3>
                 </div>
-              }
-              <div style={{
-                padding: data.logo ? '0 2.5rem' : '0',
-              }}>
-                <span>{dayjs(data.updatedAt).format('MMM DD YYYY')}</span>
-                <h2>{data.name}</h2>
-                <h3>{data.description.substring(0, 60)}{data.description.length > 60 && '...'}</h3>
               </div>
-            </div>
-          ))
-        }
-        {
-          page * perPage < count 
-            ? <p onClick={this.loadMore} className={styles.loading}><span>{loading ? 'loading...' : 'more'}</span></p>
-            : <p className={styles.loading}><span>end</span></p>
-        }
-      </div>
-    )
+            )
+          }
+        </Animate>
+        ))
+      }
+      {
+        page * perPage < count
+          ? <p onClick={this.loadMore} className={styles.loading}><span>{loading ? 'loading...' : 'more'}</span></p>
+          : <p className={styles.loading}><span>end</span></p>
+      }
+    </React.Fragment>
   }
   infos() {
     const { search } = this.props.location
@@ -131,7 +135,6 @@ export class Home extends Component<OwnProps, OwnState> {
   render() {
     const styles = require('./index.scss')
     const { user } = this.props
-    
     return (
       <div className={styles.home} style={{ height: document.documentElement.clientHeight }}>
         <h1>
@@ -139,9 +142,11 @@ export class Home extends Component<OwnProps, OwnState> {
             this.infos().map((txt, index) => (<div key={index}>{txt}</div>))
           }
         </h1>
-        {
-          this.renderArticleList()
-        }
+        <div className={styles.articleList}>
+          {
+            this.renderArticleList()
+          }
+        </div>
         <div className={styles.navbar}>
           <HomeLink/>
           <div className={styles.btns}>
@@ -153,7 +158,7 @@ export class Home extends Component<OwnProps, OwnState> {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 export default class WrapHome extends React.Component<OuterProps, {}> {

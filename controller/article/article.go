@@ -13,7 +13,6 @@ import (
 type PostArticle struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
-	BrowseCount  uint          `json:"browseCount"`
 	Status       uint          `json:"status"`
 	Content      string        `json:"content"`
 	Tags         []string      `json:"tags"`
@@ -30,7 +29,6 @@ type articleListItem struct {
 type articleUpdate struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
-	BrowseCount  uint          `json:"browseCount"`
 	Status       uint          `json:"status"`
 	Content      string        `json:"content"`
 	Tags         []string      `json:"tags"`
@@ -72,6 +70,14 @@ func GetArticleDetail(c *gin.Context) {
 		utils.SendBadResponse(c, "作者不存在")
 		return
 	}
+	if err := model.DB.C("articles").Update(bson.M{
+		"_id": bson.ObjectIdHex(id),
+	}, bson.M{"$set": struct { BrowseCount  uint `json:"browseCount"` }{
+		BrowseCount: resData.BrowseCount + 1,
+	}}); err != nil {
+		utils.SendBadResponse(c, "服务端错误")
+		return
+	}
 	resData.Author = authorData
 	c.JSON(http.StatusOK, gin.H{
 		"data": resData,
@@ -96,7 +102,7 @@ func CreateArticle(c *gin.Context) {
 		UpdatedAt:	 time.Now(),
 		Name:        postData.Name,
 		Description: postData.Description,
-		BrowseCount: postData.BrowseCount,
+		BrowseCount: 0,
 		Status:      postData.Status,
 		Content:     postData.Content,
 		Tags:        postData.Tags,
@@ -112,6 +118,7 @@ func CreateArticle(c *gin.Context) {
 		"msg": "success",
 	})
 }
+//删除文章
 func DeleteArticle(c *gin.Context) {
 	id := c.Param("id")
 	if findErr := model.DB.C("articles").Remove(bson.M{
@@ -125,6 +132,7 @@ func DeleteArticle(c *gin.Context) {
 		"msg": "success",
 	})
 }
+//更新文章
 func UpdateArticle(c *gin.Context) {
 	var postData PostArticle
 	id := c.Param("id")
@@ -138,7 +146,6 @@ func UpdateArticle(c *gin.Context) {
 		UpdatedAt:	 time.Now(),
 		Name:        postData.Name,
 		Description: postData.Description,
-		BrowseCount: postData.BrowseCount,
 		Status:      postData.Status,
 		Content:     postData.Content,
 		Tags:        postData.Tags,

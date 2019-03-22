@@ -11,7 +11,7 @@ interface OuterProps{
 }
 export default class SelectCompont extends React.Component<OuterProps, {}> {
   static defaultProps: Partial<OuterProps> = {
-    placeholder: 'placeholder'
+    placeholder: 'placeholder',
   }
   render () {
     const styles = require('./index.scss')

@@ -8,7 +8,7 @@ import R from 'utils/request'
 import * as H from 'history'
 import Init, { UserInfo } from 'models/Init'
 import { Subscribe } from 'unstated'
-import ContentView from 'components/Editor/View' 
+import ContentView from 'components/Editor/View'
 interface OuterProps {
   match: match<any>
   history: H.History
@@ -51,7 +51,6 @@ class Article extends React.Component<OwnProps, OwnState> {
     if(!data){
       return null
     }
-    
     return (
       <div className={styles.article}>
         <div className={classnames(styles.header, {
@@ -71,10 +70,13 @@ class Article extends React.Component<OwnProps, OwnState> {
             <h3>{data.description}</h3>
           </div>
           <ContentView value={data.content}/>
+          {/* <div className={styles.count}>
+            <span>{data.browseCount}</span><span><i className="iconfont iconeye" /></span>
+          </div> */}
           {
             user && user.id === data.author.id && <div className={styles.btns}>
-              <span onClick={this.onEdit}>编辑</span>
-              <span onClick={this.onDelete}>删除</span>
+              <span onClick={this.onEdit}><i className="iconfont iconbianji"/></span>
+              <span onClick={this.onDelete}><i className="iconfont iconshanchu" /></span>
             </div>
           }
         </div>

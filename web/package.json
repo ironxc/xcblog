@@ -5,7 +5,7 @@
   "proxy": "http://localhost:3100",
   "dependencies": {
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "9.0.0",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
     "babel-loader": "8.0.4",
     "babel-plugin-named-asset-import": "^0.3.0",
@@ -154,6 +154,12 @@
     "@types/react-dom": "16.0.11",
     "@types/react-router-dom": "^4.3.1",
     "@types/slate-react": "^0.20.3",
-    "tsconfig-paths-webpack-plugin": "^3.2.0"
+    "ts-loader": "^5.3.3",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "tslint": "^5.14.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-loader": "^3.5.4",
+    "tslint-react": "^3.6.0"
   }
 }

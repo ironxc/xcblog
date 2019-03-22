@@ -49,6 +49,8 @@
       cursor: pointer;
       .img{
         max-width: 45%;
+        max-height: 175px;
+        overflow: hidden;
         img{
           width: 100%;
         }

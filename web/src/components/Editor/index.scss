@@ -16,9 +16,10 @@ $white: #fff;
       border: 0;
     }
     .image-block{
-      display: inline-block;
+      text-align: center;
+      padding: 15px 0;
       img{
-        max-height: 320px;
+        max-height: 200px;
         max-width: 100%;
       }
     }

@@ -1,6 +1,6 @@
 /**
  * whatwg-fetch implement standard Fetch specification, but to use in real project,
- * we need some addtional features 
+ * we need some addtional features
  */
 import queryString from 'query-string'
 
@@ -23,7 +23,7 @@ async function request(req: any) {
 class Client {
   /**
    * send http GET request
-   * @param  {String} url       absolute URL with another site`s host is performed in accordance with CORS 
+   * @param  {String} url       absolute URL with another site`s host is performed in accordance with CORS
    * @param  {Object} [params]  url search
    * @param  {Boolean}[options] return full response data or parsed data
    * @param  {Object} [options] fetch options, see https://github.github.io/fetch/ for more details

@@ -71,7 +71,7 @@ class Menu extends React.Component<MenuProps,{}>{
   renderButton(type: string, icon: string) {
     const { value } = this.props.editor
     const styles = require('./index.scss')
-    const isActive = value.activeMarks.some((mark: any) => mark.type == type)
+    const isActive = value.activeMarks.some((mark: any) => mark.type === type)
     return (
       <span className={isActive ? styles.active : ''}
         onMouseDown={event => this.onClickMark(event, type)} key={type}>

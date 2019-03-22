@@ -12,13 +12,11 @@ import * as H from 'history'
 export interface ArticlePostData {
   name: string
   description: string
-  browseCount: number
   status: number
   content: string
   logo: string
   tags: string[]
 }
-
 
 interface OuterProps {
   match: match<any>
@@ -29,6 +27,7 @@ export interface ArticleData extends ArticlePostData{
   createdAt: string
   updatedAt: string
   id: string
+  browseCount: number
 }
 interface OwnState {
   value: Value
@@ -65,7 +64,7 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
     let FormData: FormProps = {
       id: this.props.match.params.id,
       value: this.state.value,
-      history: this.props.history
+      history: this.props.history,
     }
     if(data) {
       FormData = {

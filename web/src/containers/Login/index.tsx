@@ -208,20 +208,20 @@ class Login extends React.Component<OwnProps, OwnState> {
             display: login ? 'block' : 'none',
           }}>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signin.username.value}
                 error={signin.username.error}
                 label="账号"
-                placeholder="请输入账号" 
+                placeholder="请输入账号"
                 onChange={this.onSingin('username')}/>
             </div>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signin.password.value}
                 error={signin.password.error}
-                label="密码" 
-                placeholder="请输入密码" 
-                type="password" 
+                label="密码"
+                placeholder="请输入密码"
+                type="password"
                 onChange={this.onSingin('password')}/>
             </div>
           </div>
@@ -229,7 +229,7 @@ class Login extends React.Component<OwnProps, OwnState> {
             display: login ? 'none' : 'block',
           }}>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signup.username.value}
                 error={signup.username.error}
                 label="账号"
@@ -237,7 +237,7 @@ class Login extends React.Component<OwnProps, OwnState> {
                 onChange={this.onSingup('username')}/>
             </div>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signup.password.value}
                 error={signup.password.error}
                 label="密码"
@@ -246,7 +246,7 @@ class Login extends React.Component<OwnProps, OwnState> {
                 type="password"/>
             </div>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signup.reenterPassword.value}
                 error={signup.reenterPassword.error}
                 label="确认密码"
@@ -255,7 +255,7 @@ class Login extends React.Component<OwnProps, OwnState> {
                 type="password"/>
             </div>
             <div className={styles.inputWrap}>
-              <Input 
+              <Input
                 value={signup.email.value}
                 error={signup.email.error}
                 label="邮箱"

@@ -53,7 +53,7 @@ interface MenuProps {
 }
 class Menu extends React.Component<MenuProps, {} >{
   inputDom?: HTMLInputElement
-  upload = (event: ChangeEvent<HTMLInputElement>) => {
+  upload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = new FormData()
     if (event.target && event.target.files) {
       data.append('image', event.target.files[0])
@@ -74,7 +74,7 @@ class Menu extends React.Component<MenuProps, {} >{
           type: 'image-block',
           data: {
             src,
-          }
+          },
         })
     } else {
       editor
@@ -84,7 +84,7 @@ class Menu extends React.Component<MenuProps, {} >{
           type: 'image-block',
           data: {
             src,
-          }
+          },
         })
         .insertBlock('paragraph')
     }

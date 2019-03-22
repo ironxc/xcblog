@@ -85,7 +85,7 @@ const renderNode = (props: SlateR.RenderNodeProps, editor: CoreEditor, next: () 
       return <LinkNode {...props} />
     case 'split-line':
       return <SplitLine {...props} />
-    case 'image-block': 
+    case 'image-block':
       return <Image {...props} />
     default:
       return next()

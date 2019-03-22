@@ -34,7 +34,7 @@ export default class TextArea extends React.Component<OuterProps, {}> {
     const { focus } = this.state
     if( error ){
       return error
-    } 
+    }
     if (focus || value ){
       return label
     }
@@ -46,10 +46,11 @@ export default class TextArea extends React.Component<OuterProps, {}> {
     const { focus } = this.state
     return(
       <div className={classnames(styles.textareaComponent, {
-        [styles.focus]: focus || value,
+        [styles.focus]: focus,
       })}>
         <label htmlFor={this.id} className={classnames({
           [styles.err]: error,
+          [styles.labelTip]: focus || value,
         })}>{this.getLabelTxt()}</label>
         <div className={styles.textareaWrap}>
           <textarea
@@ -57,8 +58,7 @@ export default class TextArea extends React.Component<OuterProps, {}> {
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
             value={value}
-            onChange={this.props.onChange}>
-          </textarea>
+            onChange={this.props.onChange} />
         </div>
       </div>
     )

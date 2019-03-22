@@ -12,20 +12,23 @@ export interface OuterProps {
 interface OwnState {
   focus: boolean
 }
+const defaultProps = {
+  error: '',
+  placeholder: 'placeholder',
+  label: 'placeholder',
+  type: 'text',
+}
 export default class Input extends React.Component<OuterProps, OwnState>{
-  state = {
-    focus: false,
-  }
-  id: string = md5(Date.now() + String(Math.random())).slice(0, 24)
   static defaultProps: Partial<OuterProps> = {
     error: '',
     placeholder: 'placeholder',
     label: 'placeholder',
     type: 'text',
   }
-  componentWillMount() {
-    
+  state = {
+    focus: false,
   }
+  id: string = md5(Date.now() + String(Math.random())).slice(0, 24)
   handleFocus = () => {
     this.setState({
       focus: true,
@@ -63,9 +66,9 @@ export default class Input extends React.Component<OuterProps, OwnState>{
           <input
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-            id={this.id} 
-            type={type} 
-            value={value} 
+            id={this.id}
+            type={type}
+            value={value}
             onChange={this.props.onChange}/>
         </div>
       </div>

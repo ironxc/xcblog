@@ -36,13 +36,13 @@
   .err{
     color: $error-color;
   }
-}
-.focus {
-  border-color: $highlight-color-1;
-  label{
+  .labelTip{
     padding: 0 .5rem;
     transform: translate(.5rem, -0.5rem) scale(.7);
     background-color: $white;
     color: $color-1;
   }
+}
+.focus {
+  border-color: $highlight-color-1;
 }

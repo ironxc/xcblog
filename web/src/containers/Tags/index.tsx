@@ -18,7 +18,7 @@ class TagsPage extends React.Component<OuterProps> {
         </div>
         <div className={styles.content}>
           {
-            tags.map((t: Tag) => (<span style={{ 
+            tags.map((t: Tag) => (<span style={{
               fontSize: `${12 + t.num * 2}px`,
             }} key={t.value}><Link to={`/home?tag=${t.value}`}>{t.value}</Link></span>))
           }

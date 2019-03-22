@@ -17,7 +17,7 @@ func NowTimeStr() string {
 func FetchBinBgImg() string {
 		var reg = regexp.MustCompile(`(?Us)<link\sid="bgLink"\s*rel="preload"\s*href="(.*)"`)
 		var imgPath string = ""
-	  resp, _ := http.Get(baseUrl)
+	  resp, _ := http.Get(baseUrl + "/?FORM=BEHPTB&ensearch=1")
     body, _ := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
 		if matchResult := reg.FindAllStringSubmatch(string(body[:]), -1); matchResult != nil {
@@ -34,6 +34,12 @@ func GetBingBg(c * gin.Context) {
 	}).One(&img)
 	if( err != nil){
 		imgpath := FetchBinBgImg()
+		if(imgpath != "") {
+			err = model.DB.C("bingImages").Insert(&model.BingImage {
+				Date: NowTimeStr(),
+				Value: imgpath,
+			})
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"data": imgpath,
 			"msg": "success",

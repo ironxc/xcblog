@@ -12,6 +12,7 @@ import Editor from '../EditorPage'
 import Init from 'models/Init'
 import Article from 'src/containers/Article'
 import LoadingBar from 'components/LoadingBar/index'
+import Trigger from '../TestTrigger'
 const InitStore = new Init()
 interface AppProps {
   history?: H.History
@@ -32,12 +33,13 @@ class App extends React.Component<AppProps, {}> {
           <Switch>
             <Redirect from="/" exact to={'/home'} />
             <Route path="/home" component={Home}/>
-            <Route path="/article/:id" component={Article}></Route>
+            <Route path="/article/:id" component={Article}/>
             <Route path="/login" component={Login}/>
             <Route path="/tags" component={TagsPage}/>
             <Route path="/profile" component={Profile}/>
             <Route path="/test" component={Test} />
-            <Route path="/editor/:id" component={Editor}/>
+            <Route path="/editor/:id" component={Editor} />
+            <Route path="/trigger" component={Trigger}/>
             <Route component={NotFound} />
           </Switch>
         </Provider>
