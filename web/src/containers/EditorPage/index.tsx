@@ -31,17 +31,23 @@ export interface ArticleData extends ArticlePostData{
 }
 interface OwnState {
   value: Value
+  ready: boolean
   data?: ArticleData
 }
 
 export default class EditorPage extends React.Component<OuterProps, OwnState> {
   state: OwnState = {
     value: Value.fromJSON(initialValueAsJson as ValueJSON),
+    ready: false,
   }
   componentDidMount() {
     const { match: { params } } = this.props
     if (params.id && params.id !== 'new') {
       this.getArticle(params.id)
+    } else {
+      this.setState({
+        ready: true,
+      })
     }
   }
   getArticle = (id: string) => {
@@ -50,6 +56,7 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
         this.setState({
           data,
           value: Value.fromJSON(JSON.parse(data.content)),
+          ready: true,
         })
       })
   }
@@ -60,7 +67,7 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
   }
   render() {
     const styles = require('./index.scss')
-    const { data } = this.state
+    const { data, ready } = this.state
     let FormData: FormProps = {
       id: this.props.match.params.id,
       value: this.state.value,
@@ -72,6 +79,7 @@ export default class EditorPage extends React.Component<OuterProps, OwnState> {
         ...data,
       }
     }
+    if (!ready) { return null }
     return <div className={styles.editorPage}>
       <div className={styles.editor}>
         <Editor onChange={this.handleChange} value={this.state.value} />

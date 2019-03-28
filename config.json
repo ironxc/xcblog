@@ -3,8 +3,8 @@
   "mongodb": {
     "Database": "blog",              /*数据库名称*/
     "Address": "127.0.0.1:27017",    /*数据库地址*/
-    "UserName": "admin",             /*数据库管理账号*/
-    "PassWord": "admin"              /*数据库密码*/
+    "UserName": "",             /*数据库管理账号*/
+    "PassWord": ""              /*数据库密码*/
   },
   "base": {
     "APIPrefix": "/api",         /*Api接口前缀*/

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-
 const styles = require('./index.scss')
 const na: string = 'aaa'
 const co: number = 0
@@ -20,13 +19,7 @@ const Test = () => {
       </button>
       <h1>{name}</h1>
       <input onChange={handleChange} />
-      <AA />
     </div>
   )
-}
-class AA extends React.Component {
-  render() {
-    return [<div key="sadf">asdfasdf</div>, <div key="saffdf">asdfasdf</div>]
-  }
 }
 export default Test

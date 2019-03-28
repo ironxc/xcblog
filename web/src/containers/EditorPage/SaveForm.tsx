@@ -10,7 +10,7 @@ import Init, { Tag } from 'models/Init'
 import { ArticlePostData, ArticleData } from './index'
 import { Value } from 'slate'
 import * as H from 'history'
-
+import CheckBox from 'components/CheckBox'
 export interface OuterProps extends Partial<ArticleData> {
   id: string
   value: Value
@@ -49,26 +49,6 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
       logo: props.logo ? props.logo : '',
       tags: props.tags ? props.tags : [],
       options: props.options ? props.options : [],
-    }
-  }
-  componentWillReceiveProps(nextProps: OwnProps) {
-    this.state = {
-      name: {
-        value: nextProps.name ? nextProps.name : '',
-        label: '笔记名',
-        error: '',
-        placeholder: '请输入笔记名',
-      },
-      description: {
-        value: nextProps.description ? nextProps.description : '',
-        label: '笔记描述',
-        error: '',
-        placeholder: '请输入笔记描述',
-      },
-      status: 1,
-      logo: nextProps.logo ? nextProps.logo : '',
-      tags: nextProps.tags ? nextProps.tags : [],
-      options: nextProps.options ? nextProps.options : [],
     }
   }
   updateArticle = (data: ArticlePostData) => {
@@ -154,9 +134,14 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
   uploadImage = () => {
     if (this.inputDom) { this.inputDom.click() }
   }
+  handleStatus = (val: boolean) => {
+    this.setState({
+      status: val ? 1 : 0,
+    })
+  }
   render () {
     const styles = require('./index.scss')
-    const { name, description, options, tags, logo } = this.state
+    const { name, description, options, tags, logo, status } = this.state
     return (
       <div className={classnames(styles.saveForm)} style={{
         top: `${top}%`,
@@ -190,10 +175,13 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
               : <div className={styles.upload} onClick={this.uploadImage}><i className="iconfont iconplus" /></div>
           }
         </div>
-        <div>
-          <Select options={options} value={tags} onChange={this.onTagsChange} placeholder="标签" />
+        <Select options={options} value={tags} onChange={this.onTagsChange} placeholder="标签" />
+        <div style={{ textAlign: 'right'}}>
+          <CheckBox checked={status === 1} onChange={this.handleStatus} label="公开" />
         </div>
-        <div className={styles.btn} onClick={this.onSubmit}>保存</div>
+        <div className={styles.submit} onClick={this.onSubmit}>
+          保存
+        </div>
       </div>
     )
   }
