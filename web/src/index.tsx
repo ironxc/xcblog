@@ -9,7 +9,6 @@ import 'theme/markdown.css'
 import 'theme/iconfont.css'
 import App from 'containers/App'
 import * as serviceWorker from './serviceWorker'
-// const history = createHistory()
 const history = require('history').createBrowserHistory()
 ReactDOM.render(<Router history={history}>
     <App />

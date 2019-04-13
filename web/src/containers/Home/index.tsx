@@ -8,14 +8,8 @@ import Init, { UserInfo } from 'models/Init'
 import qs from 'query-string'
 import * as H from 'history'
 import Animate from 'components/Animate'
-interface AritcleProfile {
-  name: string
-  description: string
-  updatedAt: number
-  logo: string
-  id: string
-}
-interface FetchParam {
+import { ArticleData } from 'containers/EditorPage'
+export interface FetchParam {
   page: number
   perPage?: number
   tag?: string | string[]
@@ -23,7 +17,7 @@ interface FetchParam {
 interface OwnState {
   perPage: number
   page: number
-  list: AritcleProfile[]
+  list: ArticleData[]
   count: number
   loading: boolean
 }
@@ -36,7 +30,7 @@ interface OwnProps extends OuterProps {
 }
 export class Home extends Component<OwnProps, OwnState> {
   state = {
-    perPage: 8,
+    perPage: 4,
     page: 1,
     list: [],
     count: 0,
@@ -71,7 +65,7 @@ export class Home extends Component<OwnProps, OwnState> {
     const { page, perPage } = this.state
     this.getArticles({ page: page + 1, perPage})
   }
-  handleGoDetail = (item: AritcleProfile) => (event: React.MouseEvent) => {
+  handleGoDetail = (item: ArticleData) => (event: React.MouseEvent) => {
     event.stopPropagation()
     this.props.history.push(`/article/${item.id}`)
   }
@@ -83,7 +77,7 @@ export class Home extends Component<OwnProps, OwnState> {
     }
     return <React.Fragment>
       {
-        list.map((data: AritcleProfile, index) => (<Animate key={data.id} duration={index * 80}>
+        list.map((data: ArticleData, index) => (<Animate key={data.id} duration={index % perPage * 80}>
           {
             (style: React.CSSProperties) => (
               <div className={styles.box} style={{
@@ -121,7 +115,7 @@ export class Home extends Component<OwnProps, OwnState> {
     const { list } = this.state
     const query: any = qs.parse(search)
     let result: string[] = []
-    list.forEach((l: AritcleProfile) => {
+    list.forEach((l: ArticleData) => {
       let d = String(new Date(l.updatedAt).getFullYear())
       if (result.indexOf(d) < 0) {
         result.push(d)
@@ -152,6 +146,9 @@ export class Home extends Component<OwnProps, OwnState> {
           <div className={styles.btns}>
             {
               user && <span key="写笔记"><Link to="/editor/new">写笔记</Link></span>
+            }
+            {
+              user && <span key="文章"><Link to="/articlesmanagement">笔记管理</Link></span>
             }
             <span><Link to="/tags">标签</Link></span>
             <span><Link to="/profile">关于</Link></span>

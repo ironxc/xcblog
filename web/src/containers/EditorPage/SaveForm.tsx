@@ -134,7 +134,8 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
   uploadImage = () => {
     if (this.inputDom) { this.inputDom.click() }
   }
-  handleStatus = (val: boolean) => {
+  handleStatus = (val: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation()
     this.setState({
       status: val ? 1 : 0,
     })
@@ -171,16 +172,29 @@ class SaveForm extends React.Component<OwnProps, OwnState> {
         </div>
         <div className={styles.uploadLogo}>
           {
-            logo ? <div style={{ backgroundImage: `url(${logo})`, backgroundSize: 'cover' }}><i className="iconfont iconshanchu" onClick={this.deleteImage}/></div>
+            logo ? <div style={{
+              backgroundImage: `url(${logo})`,
+              backgroundSize: 'cover',
+              position: 'relative' }}>
+              <i
+                className="iconfont iconshanchu"
+                onClick={this.deleteImage}
+                style={{
+                  position: 'absolute',
+                  top: '2px',
+                  right: '2px',
+                  color: '#f7f7f7',
+                }}/>
+            </div>
               : <div className={styles.upload} onClick={this.uploadImage}><i className="iconfont iconplus" /></div>
           }
         </div>
         <Select options={options} value={tags} onChange={this.onTagsChange} placeholder="标签" />
-        <div style={{ textAlign: 'right'}}>
-          <CheckBox checked={status === 1} onChange={this.handleStatus} label="公开" />
-        </div>
-        <div className={styles.submit} onClick={this.onSubmit}>
-          保存
+        <div className={styles.submit}>
+          <div className={styles.checkBox}>
+            <CheckBox checked={status === 1} onChange={this.handleStatus} label="公开" />
+          </div>
+          <div className={styles.submitBtn} onClick={this.onSubmit}>保存</div>
         </div>
       </div>
     )

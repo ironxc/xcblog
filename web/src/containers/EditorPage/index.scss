@@ -1,9 +1,12 @@
 @import '../../theme/variables';
 
 .editorPage{
-  padding: 20px 0 20px 15%;
+  padding: 20px 0;
   .editor{
     width: 55%;
+    min-height: 24rem;
+    margin-left: 10%;
+    padding-top: 20px;
   }
   .form{
     position: fixed;
@@ -26,14 +29,23 @@
   .submit{
     margin-top: .5rem;
     text-align: center;
-    padding: .6rem 0;
-    background-color: $highlight-color-1;
-    color: $color-3;
-    border-radius: 2px;
-    cursor: pointer;
-    &:hover{
-      color:$white;
-      border-radius: 5px;
+    display: flex;
+    align-items: center;
+    .submitBtn{
+      width: 70%;
+      padding: .6rem 0;
+      background-color: $highlight-color-1;
+      color: $color-3;
+      border-radius: 2px;
+      cursor: pointer;
+      &:hover{
+        color:$white;
+        border-radius: 5px;
+      }
+    }
+    .checkBox{
+      width: 30%;
+      text-align: center;
     }
   }
   
@@ -43,8 +55,6 @@
     & > div{
       width: 100%;
       height: 4rem;
-      line-height: 4rem;
-      text-align: center;
       i{
         font-size: 25px;
         font-weight: bold;
@@ -52,6 +62,8 @@
     }
     .upload{
       background-color: #f7f7f7;
+      line-height: 4rem;
+      text-align: center;
       &:hover{
         background-color: $highlight-color-1;
         i{

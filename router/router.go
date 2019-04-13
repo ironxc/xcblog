@@ -26,6 +26,7 @@ func Route(router *gin.Engine) {
 		api.PUT("/article/:id", mw.SigninRequired, article.UpdateArticle)
 		api.GET("/tags",         article.GetTags)
 		api.GET("/articlelist",  article.GetArticleList)
+		api.GET("/allarticlelist", mw.SigninRequired, article.GetAllArticleList)
 	}
 	{
 		api.GET("/bingimg", spider.GetBingBg)

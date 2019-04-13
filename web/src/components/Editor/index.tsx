@@ -24,6 +24,12 @@ interface OuterProps {
 }
 class Edit extends React.Component<OuterProps, {}>{
   editor: any
+  componentDidMount() {
+    if (this.editor){
+      this.editor
+        .focus()
+    }
+  }
   onChange = ({ value }: { value: Value }) => {
     this.props.onChange(value)
   }

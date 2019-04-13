@@ -2,12 +2,12 @@ import * as React from 'react'
 import classnames from 'classnames'
 interface OuterProps {
   checked: boolean
-  onChange: (val: boolean) => void
+  onChange: (val: boolean, event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
 }
 export default class CheckBox extends React.Component<OuterProps, {}> {
-  handleChange = () => {
-    this.props.onChange(!this.props.checked)
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.onChange(!this.props.checked,event)
   }
   render () {
     const styles = require('./index.scss')

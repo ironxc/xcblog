@@ -1,0 +1,53 @@
+@import '../../theme/variables';
+
+.articleManagement{
+  .articleList{
+    width: 60%;
+    margin: 0 auto;
+    padding-top: 60px;
+    .item{
+      display: flex;
+      padding: 10px 0;
+      border-bottom: 1px solid $color-2;
+      &:hover{
+        background-color: $bg-color-1;
+      }
+      .name{
+        width: 70%;
+      }
+      .time{
+        width: 15%;
+      }
+      .icons{
+        width: 15%;
+        display: flex;
+        justify-content: space-around;
+        span{
+          &:hover{
+            color:$highlight-color-1;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .pages{
+    width: 60%;
+    margin: 20px auto 0 auto;
+    display: flex;
+    div{
+      background-color: $bg-color-2;
+      padding: 5px 12px;
+      cursor: pointer;
+      margin-left: 8px;
+      &:hover{
+        background-color: $highlight-color-1;
+        color: $white;
+      }
+    }
+    .active{
+      background-color: $highlight-color-1;
+      color: $white;
+    }
+  }
+}

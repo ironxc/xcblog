@@ -18,14 +18,6 @@ type PostArticle struct {
 	Tags         []string      `json:"tags"`
 	Logo       	 string        `json:"logo"`
 }
-type articleListItem struct {
-	ID           bson.ObjectId `json:"id" bson:"_id"`
-	UpdatedAt    time.Time     `json:"updatedAt"`
-	Name         string        `json:"name"`
-	Description  string        `json:"description"`
-	Author       model.Author  `json:"author"`
-	Logo       	 string        `json:"logo"`
-}
 type articleUpdate struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
@@ -159,10 +151,50 @@ func UpdateArticle(c *gin.Context) {
 		"msg": "success",
 	})
 }
-//获取文章预览列表数据
+//获取所有的文章列表数据
+func GetAllArticleList(c *gin.Context) {
+	articlelist := []articleRes{}
+	allArticlelist := []articleRes{}
+	var page, perPage int 
+	var tag string
+	pageQ:= c.Query("page")
+	perPageQ := c.Query("perPage")
+	tag = c.Query("tag")
+	page, _ = strconv.Atoi(pageQ)
+	perPage, _ = strconv.Atoi(perPageQ)
+	if( page <= 0) {
+		page = 1
+	}
+	if( perPage <= 0) {
+		perPage = 10
+	}
+	findQuery := bson.M{}
+	if( tag != "") {
+		findQuery["tags"] = bson.M{
+			"$elemMatch": bson.M{
+				"$in": []string{ tag },
+			},
+		}
+	}
+	err := model.DB.C("articles").Find(findQuery).Sort("-createdat").Skip((page - 1) * perPage).Limit(perPage).All(&articlelist)
+	allErr := model.DB.C("articles").Find(findQuery).All(&allArticlelist)
+	
+	if(err != nil || allErr != nil ) {
+		utils.SendBadResponse(c, "服务端错误")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": gin.H{
+			"list":articlelist,
+			"count": len(allArticlelist),
+		},
+		"msg": "success",
+	})
+}
+//获取公开的文章列表数据
 func GetArticleList(c *gin.Context) {
-	articlelist := []articleListItem{}
-	allArticlelist := []articleListItem{}
+	articlelist := []articleRes{}
+	allArticlelist := []articleRes{}
 	var page, perPage int 
 	var tag string
 	pageQ:= c.Query("page")
