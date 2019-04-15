@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 const styles = require('./index.scss')
 const na: string = 'aaa'
 const co: number = 0
+
 const Test = () => {
   const [count, setCount] = useState(co)
   const [name, setName] = useState(na)

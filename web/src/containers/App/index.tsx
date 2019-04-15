@@ -3,9 +3,12 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import { Provider } from 'unstated'
 import * as H from 'history'
 import Init from 'models/Init'
+import LoadingBar from 'components/LoadingBar'
+
 const Article = React.lazy(() => import('src/containers/Article'))
 const Editor = React.lazy(() => import('src/containers/EditorPage'))
 const Test = React.lazy(() => import('src/containers/Test'))
+const TestDecorator = React.lazy(() => import('src/containers/TestDecorator'))
 const Login = React.lazy(() => import('src/containers/Login'))
 const TagsPage = React.lazy(() => import('src/containers/Tags'))
 const NotFound = React.lazy(() => import('src/containers/NotFound'))
@@ -14,7 +17,7 @@ const Home = React.lazy(() => import('src/containers/Home'))
 const Trigger = React.lazy(() => import('src/containers/TestTrigger'))
 const ArticleManagement = React.lazy(() => import('src/containers/ArticleManagement'))
 const TestContext = React.lazy(() => import('src/containers/TestContext') )
-import LoadingBar from 'components/LoadingBar'
+
 const InitStore = new Init()
 interface AppProps {
   history?: H.History
@@ -41,6 +44,7 @@ class App extends React.Component<AppProps, {}> {
             <Route path="/home" component={Home} />
             <Route path="/context" component={TestContext} />
             <Route path="/articlesmanagement" component={ArticleManagement} />
+            <Route path="/decorator" component={TestDecorator} />
             <Route component={NotFound} />
           </Switch>
         </React.Suspense>

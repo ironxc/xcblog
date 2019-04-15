@@ -38,18 +38,26 @@ export class Home extends Component<OwnProps, OwnState> {
   }
   componentDidMount() {
     const { page, perPage } = this.state
-    this.getArticles({page, perPage})
-  }
-  getArticles = (param: FetchParam) => {
     const { search } = this.props.location
     const query: any = qs.parse(search)
+    this.getArticles({ page, perPage, tag: query.tag ? query.tag : ''})
+  }
+  componentWillReceiveProps(nextProps: OwnProps) {
+    const { search } = this.props.location
+    const { page, perPage } = this.state
+    const query: any = qs.parse(search)
+    const nextQuery: any = qs.parse(nextProps.location.search)
+    if (query.tag !== nextQuery) {
+      this.getArticles({ page, perPage, tag: nextQuery.tag ? nextQuery.tag : '' })
+    }
+  }
+  getArticles = (param: FetchParam) => {
     if(this.state.loading) { return }
     this.setState({
       loading: true,
     }, () => {
       R.get('/api/articlelist', {
         ...param,
-        tag: query.tag ? query.tag : '',
       })
         .then((res: any) => {
           this.setState({

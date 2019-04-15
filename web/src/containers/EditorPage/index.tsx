@@ -8,7 +8,7 @@ import R from 'utils/request'
 import SaveForm, { OuterProps as FormProps } from './SaveForm'
 import * as H from 'history'
 
-/** 请求要提交的文章数据 */
+/** 更新文章要提交的文章数据 */
 export interface ArticlePostData {
   name: string
   description: string
