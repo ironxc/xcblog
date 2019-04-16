@@ -62,7 +62,7 @@ export class Home extends Component<OwnProps, OwnState> {
         .then((res: any) => {
           this.setState({
             count: res.count,
-            list: [...this.state.list, ...res.list],
+            list: param.page === 1 ? res.list : [...this.state.list, ...res.list],
             page: param.page,
             loading: false,
           })
