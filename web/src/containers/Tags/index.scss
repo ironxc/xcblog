@@ -20,7 +20,7 @@
       display: inline-block;
       cursor: pointer;
       @extend .borderAnimat;
-      color: $color-2;
+      color: $color-1;
       &:hover{
         &::after{
           transform: scaleX(1);
